@@ -59,7 +59,9 @@ public class HantoGameFactory
 	public HantoGame makeHantoGame(HantoGameID gameId, HantoPlayerColor movesFirst) {
 		HantoGame game = null;
 		switch (gameId) {
-			// to be filled in
+		case ALPHA_HANTO:
+			game = new hanto.studentjgasfm.alpha.AlphaGame();
+			break;
 		}
 		return game;
 	}
