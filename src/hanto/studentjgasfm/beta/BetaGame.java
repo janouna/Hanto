@@ -31,7 +31,6 @@ public class BetaGame implements HantoGame {
 		result = moveValidator(pieceType, from, to);
 
 		moveCount++;
-		System.out.println(moveCount);
 		return result;
 	}
 
