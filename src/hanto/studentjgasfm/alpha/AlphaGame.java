@@ -31,7 +31,7 @@ public class AlphaGame implements HantoGame {
 			result = MoveResult.OK;
 		}else if(to.getX() == 0 && to.getY() == 1 && moveCount == 2){
 			pieceList.put(to, new Piece(HantoPlayerColor.RED, pieceType));
-			result = MoveResult.OK;
+			result = MoveResult.DRAW;
 		}else{
 			throw new HantoException("Invalid Position " + to.getX() + "," + to.getY());
 		}
