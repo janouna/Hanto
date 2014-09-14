@@ -11,14 +11,26 @@ package hanto.studentjgasfm.common;
 
 import hanto.common.HantoCoordinate;
 
+/**
+ * Implements HantoCoordinate and changes Hashcode and Equals methods
+ */
 public class Coordinate implements HantoCoordinate {
 	private int x, y;
 
+	/**
+	 * Constructor for Coordinate.
+	 * @param x int
+	 * @param y int
+	 */
 	public Coordinate(int x, int y){
 		this.x = x;
 		this.y = y;
 	}
 
+	/**
+	 * Constructor for Coordinate.
+	 * @param c HantoCoordinate
+	 */
 	public Coordinate(HantoCoordinate c){
 		x = c.getX();
 		y = c.getY();

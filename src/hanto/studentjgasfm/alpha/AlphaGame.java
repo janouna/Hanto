@@ -24,10 +24,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+/**
+ * First Hanto Variation
+ */
 public class AlphaGame implements HantoGame {
 	private Map<Coordinate, HantoPiece> pieceList;
 	private int moveCount;
 
+	/**
+	 * Constructor for AlphaGame.
+	 */
 	public AlphaGame(){
 		pieceList = new HashMap<Coordinate, HantoPiece>();
 		moveCount = 1;
