@@ -13,13 +13,13 @@ import hanto.studentjgasfm.common.Piece;
 import java.util.HashMap;
 
 public class BetaGame implements HantoGame {
-	private HashMap<HantoCoordinate, HantoPiece> pieceList;
+	private HashMap<Coordinate, HantoPiece> pieceList;
 	private int moveCount;
 	private boolean redButterflyPlaced = false;
 	private boolean blueButterflyPlaced = false;
 
 	public BetaGame() {
-		pieceList = new HashMap<HantoCoordinate, HantoPiece>();
+		pieceList = new HashMap<Coordinate, HantoPiece>();
 		moveCount = 1;
 	}
 
@@ -51,14 +51,14 @@ public class BetaGame implements HantoGame {
 		MoveResult result;
 
 		if (moveCount == 1 && to.getX() == 0 && to.getY() == 0) {
-			pieceList.put(to, new Piece(HantoPlayerColor.BLUE, pieceType));
+			pieceList.put(new Coordinate(to), new Piece(HantoPlayerColor.BLUE, pieceType));
 			result = MoveResult.OK;
 		} else if (moveCount == 7 && !blueButterflyPlaced) {
 			if (!pieceType.equals(HantoPieceType.BUTTERFLY)) {
 				throw new HantoException(
 						"Invalid Piece, Butterfly must be placed by fourth move");
 			} else {
-				pieceList.put(to, new Piece(HantoPlayerColor.BLUE, pieceType));
+				pieceList.put(new Coordinate(to), new Piece(HantoPlayerColor.BLUE, pieceType));
 				result = MoveResult.OK;
 			}
 		} else if (moveCount == 8 && !redButterflyPlaced) {
@@ -66,15 +66,15 @@ public class BetaGame implements HantoGame {
 				throw new HantoException(
 						"Invalid Piece, Butterfly must be placed by fourth move");
 			} else {
-				pieceList.put(to, new Piece(HantoPlayerColor.RED, pieceType));
+				pieceList.put(new Coordinate(to), new Piece(HantoPlayerColor.RED, pieceType));
 				result = MoveResult.OK;
 			}
 		} else if (moveCount > 1 && getPieceAt(to) == null
 				&& hasAdjacentPiece(to)) {
 			if (moveCount % 2 == 0) {
-				pieceList.put(to, new Piece(HantoPlayerColor.RED, pieceType));
+				pieceList.put(new Coordinate(to), new Piece(HantoPlayerColor.RED, pieceType));
 			} else {
-				pieceList.put(to, new Piece(HantoPlayerColor.BLUE, pieceType));
+				pieceList.put(new Coordinate(to), new Piece(HantoPlayerColor.BLUE, pieceType));
 			}
 			result = MoveResult.OK;
 		} else {

@@ -7,17 +7,18 @@ import hanto.common.HantoPiece;
 import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
 import hanto.common.MoveResult;
+import hanto.studentjgasfm.common.Coordinate;
 import hanto.studentjgasfm.common.Piece;
 
 import java.util.HashMap;
 
 
 public class AlphaGame implements HantoGame {
-	private HashMap<HantoCoordinate, HantoPiece> pieceList;
+	private HashMap<Coordinate, HantoPiece> pieceList;
 	private int moveCount;
 
 	public AlphaGame(){
-		pieceList = new HashMap<HantoCoordinate, HantoPiece>();
+		pieceList = new HashMap<Coordinate, HantoPiece>();
 		moveCount = 1;
 	}
 
@@ -27,10 +28,10 @@ public class AlphaGame implements HantoGame {
 		MoveResult result;
 
 		if(moveCount == 1 && to.getX() == 0 && to.getY() == 0 && pieceType == HantoPieceType.BUTTERFLY){
-			pieceList.put(to, new Piece(HantoPlayerColor.BLUE, pieceType));
+			pieceList.put(new Coordinate(to), new Piece(HantoPlayerColor.BLUE, pieceType));
 			result = MoveResult.OK;
 		}else if(moveCount == 2 && isAdjacentToOrigin(to) && pieceType == HantoPieceType.BUTTERFLY){
-			pieceList.put(to, new Piece(HantoPlayerColor.RED, pieceType));
+			pieceList.put(new Coordinate(to), new Piece(HantoPlayerColor.RED, pieceType));
 			result = MoveResult.DRAW;
 		}else{
 			throw new HantoException("Invalid Position " + to.getX() + "," + to.getY());
