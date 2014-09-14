@@ -27,20 +27,62 @@ public class AlphaGameTest {
 		try{
 			alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 1));
 			fail();
-		}catch(HantoException e){
-		}
+		}catch(HantoException e){	}
 	}
 	
 	@Test
-	public void addBlueThenRed() throws HantoException{
+	public void addBlueThenRed1() throws HantoException{
 		assertTrue(alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0)) == MoveResult.OK);
 		assertTrue(alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 1)) == MoveResult.DRAW);
 	}
 	
-	/*
 	@Test
-	public void addRedButterflyFirst(){
-		
-	}*/
-
+	public void addBlueThenRed2() throws HantoException{
+		assertTrue(alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0)) == MoveResult.OK);
+		assertTrue(alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(1, -1)) == MoveResult.DRAW);
+	}
+	
+	@Test
+	public void addRedInvalid1() throws HantoException{
+		alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0));
+		try{
+			alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0));
+			fail();
+		}catch(HantoException e){	}
+	}
+	
+	@Test
+	public void addRedInvalid2() throws HantoException{
+		alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0));
+		try{
+			alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(-1, -1));
+			fail();
+		}catch(HantoException e){	}
+	}
+	
+	@Test
+	public void addRedInvalid3() throws HantoException{
+		alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0));
+		try{
+			alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(2, -3));
+			fail();
+		}catch(HantoException e){	}
+	}
+	
+	@Test
+	public void addSparrow1() throws HantoException{
+		try{
+			alpha.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 0));
+			fail();
+		}catch(HantoException e){	}
+	}
+	
+	@Test
+	public void addSparrow2() throws HantoException{
+		alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0));
+		try{
+			alpha.makeMove(HantoPieceType.SPARROW, null, new Coordinate(1, -1));
+			fail();
+		}catch(HantoException e){	}
+	}
 }
