@@ -65,11 +65,18 @@ public class BetaGameTest {
 		beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 3));
 		beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 4));
 		beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 5));
-		assertTrue(beta.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 6)) == MoveResult.OK);
+		try {
+			beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 6));
+		} catch (HantoException e1) {	
+			assertTrue(beta.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 6)) == MoveResult.OK);
+		}
+
 		try{
 			beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 7));
 			fail();
-		}catch(HantoException e){	}
+		}catch(HantoException e){	
+			assertTrue(beta.makeMove(HantoPieceType.BUTTERFLY,null, new Coordinate(0,7)) == MoveResult.OK);
+		}
 	}
 	
 	@Test
@@ -86,6 +93,17 @@ public class BetaGameTest {
 		beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 9));
 		beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 10));
 		assertTrue(beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 11)) == MoveResult.DRAW);
+	}
+	
+	@Test
+	public void testThatPlayerCannotPlaceMultipleButterflies() throws HantoException{
+		beta.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0,0));
+		beta.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0,1));
+		
+		try{
+			beta.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0,2));
+			fail();
+		}catch(HantoException e){  }
 	}
 
 	/*

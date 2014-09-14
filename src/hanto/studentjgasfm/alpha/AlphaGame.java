@@ -11,10 +11,11 @@ import hanto.studentjgasfm.common.Coordinate;
 import hanto.studentjgasfm.common.Piece;
 
 import java.util.HashMap;
+import java.util.Map;
 
 
 public class AlphaGame implements HantoGame {
-	private HashMap<Coordinate, HantoPiece> pieceList;
+	private Map<Coordinate, HantoPiece> pieceList;
 	private int moveCount;
 
 	public AlphaGame(){
