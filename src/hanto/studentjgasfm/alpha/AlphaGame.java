@@ -48,14 +48,18 @@ public class AlphaGame implements HantoGame {
 
 	@Override
 	public HantoPiece getPieceAt(HantoCoordinate where) {
-		// TODO Auto-generated method stub
-		return null;
+		return pieceList.get(new Coordinate(where));
 	}
 
 	@Override
 	public String getPrintableBoard() {
-		// TODO Auto-generated method stub
-		return null;
+		String board = "";
+		for(Coordinate c: pieceList.keySet()){
+			HantoPiece p = pieceList.get(c);
+			board += c.getX() + "," + c.getY() + " " + p.getColor() + " " + p.getType() + "\n";
+		}
+		
+		return board;
 	}
 
 }

@@ -36,7 +36,7 @@ public class BetaGame implements HantoGame {
 
 	@Override
 	public HantoPiece getPieceAt(HantoCoordinate where) {
-		return pieceList.get(where);
+		return pieceList.get(new Coordinate(where));
 	}
 
 	@Override
