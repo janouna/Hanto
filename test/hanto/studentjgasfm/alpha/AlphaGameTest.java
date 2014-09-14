@@ -9,7 +9,6 @@
  *******************************************************************************/
 package hanto.studentjgasfm.alpha;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import hanto.HantoGameFactory;
@@ -136,13 +135,15 @@ public class AlphaGameTest {
 	public void testBoard1() throws HantoException{
 		alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0));
 		alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 1));
-		assertEquals("0,0 BLUE Butterfly\n0,1 RED Butterfly\n", alpha.getPrintableBoard());
+		assertTrue(alpha.getPrintableBoard().contains("0,0 BLUE Butterfly\n"));
+		assertTrue(alpha.getPrintableBoard().contains("0,1 RED Butterfly\n"));
 	}
 	
 	@Test
 	public void testBoard2() throws HantoException{
 		alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0));
 		alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(1, -1));
-		assertEquals("0,0 BLUE Butterfly\n1,-1 RED Butterfly\n", alpha.getPrintableBoard());
+		assertTrue(alpha.getPrintableBoard().contains("0,0 BLUE Butterfly\n"));
+		assertTrue(alpha.getPrintableBoard().contains("1,-1 RED Butterfly\n"));
 	}
 }

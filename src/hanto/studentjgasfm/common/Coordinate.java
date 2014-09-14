@@ -13,12 +13,12 @@ import hanto.common.HantoCoordinate;
 
 public class Coordinate implements HantoCoordinate {
 	private int x, y;
-	
+
 	public Coordinate(int x, int y){
 		this.x = x;
 		this.y = y;
 	}
-	
+
 	public Coordinate(HantoCoordinate c){
 		x = c.getX();
 		y = c.getY();
@@ -45,19 +45,17 @@ public class Coordinate implements HantoCoordinate {
 
 	@Override
 	public boolean equals(Object obj) {
+		boolean equals = false;
+
 		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Coordinate other = (Coordinate) obj;
-		if (x != other.x)
-			return false;
-		if (y != other.y)
-			return false;
-		return true;
+			equals = true;
+		else if(obj != null && getClass() == obj.getClass()){
+			Coordinate other = (Coordinate) obj;
+			if (x == other.x && y == other.y)
+				equals = true;
+		}
+		return equals;
 	}
-	
-	
+
+
 }

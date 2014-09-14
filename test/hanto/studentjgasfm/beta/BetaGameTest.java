@@ -116,6 +116,22 @@ public class BetaGameTest {
 			assertTrue(beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 2)) == MoveResult.OK);
 		}
 	}
+	
+	@Test
+	public void testBoard1() throws HantoException{
+		beta.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0));
+		beta.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 1));
+		assertTrue(beta.getPrintableBoard().contains("0,0 BLUE Butterfly\n"));
+		assertTrue(beta.getPrintableBoard().contains("0,1 RED Butterfly\n"));
+	}
+	
+	@Test
+	public void testBoard2() throws HantoException{
+		beta.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0));
+		beta.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(1, -1));
+		assertTrue(beta.getPrintableBoard().contains("0,0 BLUE Butterfly\n"));
+		assertTrue(beta.getPrintableBoard().contains("1,-1 RED Butterfly\n"));
+	}
 
 
 }
