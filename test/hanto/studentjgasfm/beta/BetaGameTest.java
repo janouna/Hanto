@@ -1,6 +1,14 @@
+/*******************************************************************************
+ * This files was developed for CS4233: Object-Oriented Analysis & Design.
+ * The course was taken at Worcester Polytechnic Institute.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *******************************************************************************/
 package hanto.studentjgasfm.beta;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import hanto.HantoGameFactory;
@@ -15,16 +23,17 @@ import hanto.common.MoveResult;
 import hanto.studentjgasfm.common.Coordinate;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
 
 public class BetaGameTest {
 	HantoGame beta;
-	HashMap<HantoCoordinate, HantoPiece> pieceList;
+	Map<HantoCoordinate, HantoPiece> pieceList;
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		HantoGameFactory factory = HantoGameFactory.getInstance();
 		beta = factory.makeHantoGame(HantoGameID.BETA_HANTO);
 		pieceList = new HashMap<HantoCoordinate, HantoPiece>();
@@ -33,9 +42,9 @@ public class BetaGameTest {
 	@Test
 	public void findPieceTest() throws HantoException{
 		assertTrue(beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 0)) == MoveResult.OK);
-		assertTrue(beta.getPieceAt(new Coordinate(0,0)).getColor().equals(HantoPlayerColor.BLUE));
-		assertTrue(beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0,1)) == MoveResult.OK);
-		assertTrue(beta.getPieceAt(new Coordinate(0,1)).getColor().equals(HantoPlayerColor.RED));
+		assertTrue(beta.getPieceAt(new Coordinate(0, 0)).getColor().equals(HantoPlayerColor.BLUE));
+		assertTrue(beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 1)) == MoveResult.OK);
+		assertTrue(beta.getPieceAt(new Coordinate(0, 1)).getColor().equals(HantoPlayerColor.RED));
 		
 	}
 	
@@ -43,8 +52,8 @@ public class BetaGameTest {
 	@Test (expected = HantoException.class)
 	public void testMoveOntoAnotherPiece() throws HantoException{
 		assertTrue(beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 0)) == MoveResult.OK);
-		assertTrue(beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0,1)) == MoveResult.OK);
-		beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0,0));
+		assertTrue(beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 1)) == MoveResult.OK);
+		beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 0));
 		
 	}
 	
@@ -52,9 +61,9 @@ public class BetaGameTest {
 	public void testCheckAdjacentPieces() throws HantoException{
 		beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 0));
 		beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 1));
-		assertTrue(beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0,2)) == MoveResult.OK);
-		beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(3,3));
-		assertTrue(beta.getPieceAt(new Coordinate(3,3)).equals(null));
+		assertTrue(beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 2)) == MoveResult.OK);
+		beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(3, 3));
+		assertTrue(beta.getPieceAt(new Coordinate(3, 3)).equals(null));
 	}
 	
 	@Test
@@ -75,7 +84,7 @@ public class BetaGameTest {
 			beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 7));
 			fail();
 		}catch(HantoException e){	
-			assertTrue(beta.makeMove(HantoPieceType.BUTTERFLY,null, new Coordinate(0,7)) == MoveResult.OK);
+			assertTrue(beta.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 7)) == MoveResult.OK);
 		}
 	}
 	
@@ -97,19 +106,16 @@ public class BetaGameTest {
 	
 	@Test
 	public void testThatPlayerCannotPlaceMultipleButterflies() throws HantoException{
-		beta.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0,0));
-		beta.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0,1));
+		beta.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0));
+		beta.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 1));
 		
 		try{
-			beta.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0,2));
+			beta.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 2));
 			fail();
-		}catch(HantoException e){  }
+		}catch(HantoException e){  
+			assertTrue(beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 2)) == MoveResult.OK);
+		}
 	}
 
-	/*
-	 * @Test public void addRedButterflyFirst(){
-	 * 
-	 * }
-	 */
 
 }
