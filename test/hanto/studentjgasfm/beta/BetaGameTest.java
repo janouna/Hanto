@@ -71,6 +71,22 @@ public class BetaGameTest {
 			fail();
 		}catch(HantoException e){	}
 	}
+	
+	@Test
+	public void testFullGameToDraw() throws HantoException{
+		beta.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0));
+		beta.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 1));
+		beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 2));
+		beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 3));
+		beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 4));
+		beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 5));
+		beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 6));
+		beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 7));
+		beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 8));
+		beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 9));
+		beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 10));
+		assertTrue(beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 11)) == MoveResult.DRAW);
+	}
 
 	/*
 	 * @Test public void addRedButterflyFirst(){

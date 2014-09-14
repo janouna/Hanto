@@ -79,18 +79,22 @@ public class BetaGame implements HantoGame {
 			}
 		} else if (moveCount > 1 && getPieceAt(to) == null
 				&& hasAdjacentPiece(to)) {
-			if (moveCount % 2 == 0) {
+			if (moveCount % 2 == 0 && redSparrowCount != 0) {
 				pieceList.put(new Coordinate(to), new Piece(HantoPlayerColor.RED, pieceType));
 				decrementPieceType(pieceType, HantoPlayerColor.RED);
-			} else {
+			} else if(moveCount % 2 == 1 && blueSparrowCount != 0){
 				pieceList.put(new Coordinate(to), new Piece(HantoPlayerColor.BLUE, pieceType));
 				decrementPieceType(pieceType, HantoPlayerColor.BLUE);
 			}
 			result = MoveResult.OK;
 			moveCount++;
-		} else {
+		}else {
 			throw new HantoException("Invalid Position " + to.getX() + ","
 					+ to.getY());
+		}
+		
+		if(blueSparrowCount == 0 && redSparrowCount == 0 && blueButterflyPlaced && redButterflyPlaced){
+			result = MoveResult.DRAW;
 		}
 
 		return result;
