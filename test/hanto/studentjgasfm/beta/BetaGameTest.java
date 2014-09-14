@@ -2,6 +2,7 @@ package hanto.studentjgasfm.beta;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import hanto.HantoGameFactory;
 import hanto.common.HantoCoordinate;
 import hanto.common.HantoException;
@@ -54,6 +55,21 @@ public class BetaGameTest {
 		assertTrue(beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0,2)) == MoveResult.OK);
 		beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(3,3));
 		assertTrue(beta.getPieceAt(new Coordinate(3,3)).equals(null));
+	}
+	
+	@Test
+	public void testButterflyPlacedByFourthMove() throws HantoException{
+		beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 0));
+		beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 1));
+		beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 2));
+		beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 3));
+		beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 4));
+		beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 5));
+		assertTrue(beta.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 6)) == MoveResult.OK);
+		try{
+			beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 7));
+			fail();
+		}catch(HantoException e){	}
 	}
 
 	/*

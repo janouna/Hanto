@@ -17,6 +17,8 @@ public class BetaGame implements HantoGame {
 	private int moveCount;
 	private boolean redButterflyPlaced = false;
 	private boolean blueButterflyPlaced = false;
+	private int redSparrowCount = 5;
+	private int blueSparrowCount = 5;
 
 	public BetaGame() {
 		pieceList = new HashMap<HantoCoordinate, HantoPiece>();
@@ -30,7 +32,6 @@ public class BetaGame implements HantoGame {
 
 		result = moveValidator(pieceType, from, to);
 
-		moveCount++;
 		return result;
 	}
 
@@ -52,14 +53,18 @@ public class BetaGame implements HantoGame {
 
 		if (moveCount == 1 && to.getX() == 0 && to.getY() == 0) {
 			pieceList.put(to, new Piece(HantoPlayerColor.BLUE, pieceType));
+			decrementPieceType(pieceType, HantoPlayerColor.BLUE);
 			result = MoveResult.OK;
+			moveCount++;
 		} else if (moveCount == 7 && !blueButterflyPlaced) {
 			if (!pieceType.equals(HantoPieceType.BUTTERFLY)) {
 				throw new HantoException(
 						"Invalid Piece, Butterfly must be placed by fourth move");
 			} else {
 				pieceList.put(to, new Piece(HantoPlayerColor.BLUE, pieceType));
+				decrementPieceType(pieceType, HantoPlayerColor.BLUE);
 				result = MoveResult.OK;
+				moveCount++;
 			}
 		} else if (moveCount == 8 && !redButterflyPlaced) {
 			if (!pieceType.equals(HantoPieceType.BUTTERFLY)) {
@@ -67,22 +72,44 @@ public class BetaGame implements HantoGame {
 						"Invalid Piece, Butterfly must be placed by fourth move");
 			} else {
 				pieceList.put(to, new Piece(HantoPlayerColor.RED, pieceType));
+				decrementPieceType(pieceType, HantoPlayerColor.RED);
 				result = MoveResult.OK;
+				moveCount++;
 			}
 		} else if (moveCount > 1 && getPieceAt(to) == null
 				&& hasAdjacentPiece(to)) {
 			if (moveCount % 2 == 0) {
 				pieceList.put(to, new Piece(HantoPlayerColor.RED, pieceType));
+				decrementPieceType(pieceType, HantoPlayerColor.RED);
 			} else {
 				pieceList.put(to, new Piece(HantoPlayerColor.BLUE, pieceType));
+				decrementPieceType(pieceType, HantoPlayerColor.BLUE);
 			}
 			result = MoveResult.OK;
+			moveCount++;
 		} else {
 			throw new HantoException("Invalid Position " + to.getX() + ","
 					+ to.getY());
 		}
 
 		return result;
+	}
+
+	private void decrementPieceType(HantoPieceType pieceType, HantoPlayerColor playerColor) {
+		if(pieceType.equals(HantoPieceType.BUTTERFLY)){
+			if(playerColor.equals(HantoPlayerColor.RED)){
+				redButterflyPlaced = true;
+			}else{
+				blueButterflyPlaced = true;
+			}
+		}else if(pieceType.equals(HantoPieceType.SPARROW)){
+			if(playerColor.equals(HantoPlayerColor.RED)){
+				redSparrowCount -= 1;
+			}else{
+				blueSparrowCount -= 1;
+			}
+		}
+		
 	}
 
 	private boolean hasAdjacentPiece(HantoCoordinate to) {
@@ -104,8 +131,4 @@ public class BetaGame implements HantoGame {
 		return hasPieceAdjacent;
 	}
 	
-	public int getMoveCount(){
-		return moveCount;
-	}
-
 }
