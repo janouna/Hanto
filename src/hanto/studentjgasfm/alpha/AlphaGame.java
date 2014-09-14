@@ -26,10 +26,10 @@ public class AlphaGame implements HantoGame {
 			HantoCoordinate to) throws HantoException {
 		MoveResult result;
 
-		if(to.getX() == 0 && to.getY() == 0 && moveCount == 1){
+		if(moveCount == 1 && to.getX() == 0 && to.getY() == 0 && pieceType == HantoPieceType.BUTTERFLY){
 			pieceList.put(to, new Piece(HantoPlayerColor.BLUE, pieceType));
 			result = MoveResult.OK;
-		}else if(to.getX() == 0 && to.getY() == 1 && moveCount == 2){
+		}else if(moveCount == 2 && isAdjacentToOrigin(to) && pieceType == HantoPieceType.BUTTERFLY){
 			pieceList.put(to, new Piece(HantoPlayerColor.RED, pieceType));
 			result = MoveResult.DRAW;
 		}else{
@@ -38,6 +38,11 @@ public class AlphaGame implements HantoGame {
 		
 		moveCount++;
 		return result;
+	}
+
+	private boolean isAdjacentToOrigin(HantoCoordinate to) {
+		//True 0,1 ; 1,0 ; 0,-1 ; -1,0 ; 1,-1 ; -1,1;  False for 0,0 ; 1,1 ; -1,-1; everything greater
+		return !(to.getX() == 0 && to.getY() == 0) && Math.abs(to.getX() + to.getY()) < 2 && Math.abs(to.getX()) <= 1 && Math.abs(to.getY()) <= 1;
 	}
 
 	@Override

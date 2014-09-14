@@ -18,5 +18,10 @@ public class HantoGameFactoryTest {
 	public void createAlphaGame() {
 		assertTrue(factory.makeHantoGame(HantoGameID.ALPHA_HANTO) instanceof hanto.studentjgasfm.alpha.AlphaGame);
 	}
+	
+	@Test
+	public void createBetaGame(){
+		assertTrue(factory.makeHantoGame(HantoGameID.BETA_HANTO) instanceof hanto.studentjgasfm.beta.BetaGame);
+	}
 
 }
