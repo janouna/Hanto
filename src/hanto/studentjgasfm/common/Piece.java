@@ -13,10 +13,18 @@ import hanto.common.HantoPiece;
 import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
 
+/**
+ * Implementation of HantoPiece
+ */
 public class Piece implements HantoPiece {
 	private HantoPlayerColor color;
 	private HantoPieceType type;
 	
+	/**
+	 * Constructor for Piece.
+	 * @param c HantoPlayerColor
+	 * @param t HantoPieceType
+	 */
 	public Piece(HantoPlayerColor c, HantoPieceType t){
 		color = c;
 		type = t;
