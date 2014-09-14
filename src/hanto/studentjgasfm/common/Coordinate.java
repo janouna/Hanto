@@ -9,6 +9,11 @@ public class Coordinate implements HantoCoordinate {
 		this.x = x;
 		this.y = y;
 	}
+	
+	public Coordinate(HantoCoordinate c){
+		this.x = c.getX();
+		this.y = c.getY();
+	}
 
 	@Override
 	public int getX() {

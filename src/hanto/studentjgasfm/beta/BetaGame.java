@@ -13,7 +13,7 @@ import hanto.studentjgasfm.common.Piece;
 import java.util.HashMap;
 
 public class BetaGame implements HantoGame {
-	private HashMap<HantoCoordinate, HantoPiece> pieceList;
+	private HashMap<Coordinate, HantoPiece> pieceList;
 	private int moveCount;
 	private boolean redButterflyPlaced = false;
 	private boolean blueButterflyPlaced = false;
@@ -21,7 +21,7 @@ public class BetaGame implements HantoGame {
 	private int blueSparrowCount = 5;
 
 	public BetaGame() {
-		pieceList = new HashMap<HantoCoordinate, HantoPiece>();
+		pieceList = new HashMap<Coordinate, HantoPiece>();
 		moveCount = 1;
 	}
 
@@ -37,7 +37,7 @@ public class BetaGame implements HantoGame {
 
 	@Override
 	public HantoPiece getPieceAt(HantoCoordinate where) {
-		return pieceList.get(where);
+		return pieceList.get(new Coordinate(where));
 	}
 
 	@Override
@@ -52,8 +52,9 @@ public class BetaGame implements HantoGame {
 		MoveResult result;
 
 		if (moveCount == 1 && to.getX() == 0 && to.getY() == 0) {
-			pieceList.put(to, new Piece(HantoPlayerColor.BLUE, pieceType));
+			pieceList.put(new Coordinate(to), new Piece(HantoPlayerColor.BLUE, pieceType));
 			decrementPieceType(pieceType, HantoPlayerColor.BLUE);
+
 			result = MoveResult.OK;
 			moveCount++;
 		} else if (moveCount == 7 && !blueButterflyPlaced) {
@@ -61,7 +62,7 @@ public class BetaGame implements HantoGame {
 				throw new HantoException(
 						"Invalid Piece, Butterfly must be placed by fourth move");
 			} else {
-				pieceList.put(to, new Piece(HantoPlayerColor.BLUE, pieceType));
+				pieceList.put(new Coordinate(to), new Piece(HantoPlayerColor.BLUE, pieceType));
 				decrementPieceType(pieceType, HantoPlayerColor.BLUE);
 				result = MoveResult.OK;
 				moveCount++;
@@ -71,7 +72,7 @@ public class BetaGame implements HantoGame {
 				throw new HantoException(
 						"Invalid Piece, Butterfly must be placed by fourth move");
 			} else {
-				pieceList.put(to, new Piece(HantoPlayerColor.RED, pieceType));
+				pieceList.put(new Coordinate(to), new Piece(HantoPlayerColor.RED, pieceType));
 				decrementPieceType(pieceType, HantoPlayerColor.RED);
 				result = MoveResult.OK;
 				moveCount++;
@@ -79,10 +80,10 @@ public class BetaGame implements HantoGame {
 		} else if (moveCount > 1 && getPieceAt(to) == null
 				&& hasAdjacentPiece(to)) {
 			if (moveCount % 2 == 0) {
-				pieceList.put(to, new Piece(HantoPlayerColor.RED, pieceType));
+				pieceList.put(new Coordinate(to), new Piece(HantoPlayerColor.RED, pieceType));
 				decrementPieceType(pieceType, HantoPlayerColor.RED);
 			} else {
-				pieceList.put(to, new Piece(HantoPlayerColor.BLUE, pieceType));
+				pieceList.put(new Coordinate(to), new Piece(HantoPlayerColor.BLUE, pieceType));
 				decrementPieceType(pieceType, HantoPlayerColor.BLUE);
 			}
 			result = MoveResult.OK;
