@@ -64,14 +64,9 @@ public class AlphaGameTest {
 	 * Method addBlueButterflyInvalid.
 	 * @throws HantoException
 	 */
-	@Test
+	@Test (expected = HantoException.class)
 	public void addBlueButterflyInvalid() throws HantoException{
-		try{
-			alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 1));
-			fail();
-		}catch(HantoException e){	
-			assertTrue(alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0)) == MoveResult.OK);
-		}
+		alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 1));
 	}
 	
 	/**
@@ -107,74 +102,54 @@ public class AlphaGameTest {
 	 * Method addRedInvalid1.
 	 * @throws HantoException
 	 */
-	@Test
+	@Test (expected = HantoException.class)
 	public void addRedInvalid1() throws HantoException{
 		alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0));
-		try{
-			alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0));
-			fail();
-		}catch(HantoException e){	
-			assertTrue(alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 1)) == MoveResult.DRAW);
-		}
+		alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0));
 	}
 	
 	/**
 	 * Method addRedInvalid2.
 	 * @throws HantoException
 	 */
-	@Test
+	@Test (expected = HantoException.class)
 	public void addRedInvalid2() throws HantoException{
 		alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0));
-		try{
-			alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(-1, -1));
-			fail();
-		}catch(HantoException e){	
-			assertTrue(alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(1, -1)) == MoveResult.DRAW);
-		}
+		alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(-1, -1));
+
+
 	}
 	
 	/**
 	 * Method addRedInvalid3.
 	 * @throws HantoException
 	 */
-	@Test
+	@Test (expected = HantoException.class)
 	public void addRedInvalid3() throws HantoException{
 		alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0));
-		try{
-			alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(2, -3));
-			fail();
-		}catch(HantoException e){	
-			assertTrue(alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 1)) == MoveResult.DRAW);
-		}
+		alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(2, -3));
+
 	}
 	
 	/**
 	 * Method addSparrow1.
 	 * @throws HantoException
 	 */
-	@Test
+	@Test (expected = HantoException.class)
 	public void addSparrow1() throws HantoException{
-		try{
-			alpha.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 0));
-			fail();
-		}catch(HantoException e){	
-			assertTrue(alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0)) == MoveResult.OK);
-		}
+		alpha.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 0));
+
 	}
 	
 	/**
 	 * Method addSparrow2.
 	 * @throws HantoException
 	 */
-	@Test
+	@Test (expected = HantoException.class)
 	public void addSparrow2() throws HantoException{
 		alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0));
-		try{
-			alpha.makeMove(HantoPieceType.SPARROW, null, new Coordinate(1, -1));
-			fail();
-		}catch(HantoException e){	
-			assertTrue(alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(1, -1)) == MoveResult.DRAW);
-		}
+		alpha.makeMove(HantoPieceType.SPARROW, null, new Coordinate(1, -1));
+
 	}
 	
 	/**
