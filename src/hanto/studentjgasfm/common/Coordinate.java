@@ -11,14 +11,26 @@ package hanto.studentjgasfm.common;
 
 import hanto.common.HantoCoordinate;
 
+/**
+ * Implements HantoCoordinate and changes Hashcode and Equals methods
+ */
 public class Coordinate implements HantoCoordinate {
 	private int x, y;
-	
+
+	/**
+	 * Constructor for Coordinate.
+	 * @param x int
+	 * @param y int
+	 */
 	public Coordinate(int x, int y){
 		this.x = x;
 		this.y = y;
 	}
-	
+
+	/**
+	 * Constructor for Coordinate.
+	 * @param c HantoCoordinate
+	 */
 	public Coordinate(HantoCoordinate c){
 		x = c.getX();
 		y = c.getY();
@@ -45,19 +57,17 @@ public class Coordinate implements HantoCoordinate {
 
 	@Override
 	public boolean equals(Object obj) {
+		boolean equals = false;
+
 		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Coordinate other = (Coordinate) obj;
-		if (x != other.x)
-			return false;
-		if (y != other.y)
-			return false;
-		return true;
+			equals = true;
+		else if(obj != null && getClass() == obj.getClass()){
+			Coordinate other = (Coordinate) obj;
+			if (x == other.x && y == other.y)
+				equals = true;
+		}
+		return equals;
 	}
-	
-	
+
+
 }

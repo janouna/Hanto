@@ -9,7 +9,6 @@
  *******************************************************************************/
 package hanto.studentjgasfm.alpha;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import hanto.HantoGameFactory;
@@ -25,20 +24,34 @@ import hanto.studentjgasfm.common.Coordinate;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * Testing AlphaGame
+ */
 public class AlphaGameTest {
 	HantoGame alpha;
 	
+	/**
+	 * Method setUp.
+	 */
 	@Before
 	public void setUp() {
 		HantoGameFactory factory = HantoGameFactory.getInstance();
 		alpha = factory.makeHantoGame(HantoGameID.ALPHA_HANTO);
 	}
 
+	/**
+	 * Method addBlueButterfly1.
+	 * @throws HantoException
+	 */
 	@Test
 	public void addBlueButterfly1() throws HantoException{
 		assertTrue(alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0)) == MoveResult.OK);
 	}
 	
+	/**
+	 * Method addBlueButterfly2.
+	 * @throws HantoException
+	 */
 	@Test
 	public void addBlueButterfly2() throws HantoException{
 		assertTrue(alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0)) == MoveResult.OK);
@@ -47,6 +60,10 @@ public class AlphaGameTest {
 		assertTrue(p.getType() == HantoPieceType.BUTTERFLY);
 	}
 	
+	/**
+	 * Method addBlueButterflyInvalid.
+	 * @throws HantoException
+	 */
 	@Test
 	public void addBlueButterflyInvalid() throws HantoException{
 		try{
@@ -57,6 +74,10 @@ public class AlphaGameTest {
 		}
 	}
 	
+	/**
+	 * Method addBlueThenRed1.
+	 * @throws HantoException
+	 */
 	@Test
 	public void addBlueThenRed1() throws HantoException{
 		assertTrue(alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0)) == MoveResult.OK);
@@ -69,6 +90,10 @@ public class AlphaGameTest {
 		assertTrue(p2.getType() == HantoPieceType.BUTTERFLY);
 	}
 	
+	/**
+	 * Method addBlueThenRed2.
+	 * @throws HantoException
+	 */
 	@Test
 	public void addBlueThenRed2() throws HantoException{
 		assertTrue(alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0)) == MoveResult.OK);
@@ -78,6 +103,10 @@ public class AlphaGameTest {
 		assertTrue(p.getType() == HantoPieceType.BUTTERFLY);
 	}
 	
+	/**
+	 * Method addRedInvalid1.
+	 * @throws HantoException
+	 */
 	@Test
 	public void addRedInvalid1() throws HantoException{
 		alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0));
@@ -89,6 +118,10 @@ public class AlphaGameTest {
 		}
 	}
 	
+	/**
+	 * Method addRedInvalid2.
+	 * @throws HantoException
+	 */
 	@Test
 	public void addRedInvalid2() throws HantoException{
 		alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0));
@@ -100,6 +133,10 @@ public class AlphaGameTest {
 		}
 	}
 	
+	/**
+	 * Method addRedInvalid3.
+	 * @throws HantoException
+	 */
 	@Test
 	public void addRedInvalid3() throws HantoException{
 		alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0));
@@ -111,6 +148,10 @@ public class AlphaGameTest {
 		}
 	}
 	
+	/**
+	 * Method addSparrow1.
+	 * @throws HantoException
+	 */
 	@Test
 	public void addSparrow1() throws HantoException{
 		try{
@@ -121,6 +162,10 @@ public class AlphaGameTest {
 		}
 	}
 	
+	/**
+	 * Method addSparrow2.
+	 * @throws HantoException
+	 */
 	@Test
 	public void addSparrow2() throws HantoException{
 		alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0));
@@ -132,17 +177,27 @@ public class AlphaGameTest {
 		}
 	}
 	
+	/**
+	 * Method testBoard1.
+	 * @throws HantoException
+	 */
 	@Test
 	public void testBoard1() throws HantoException{
 		alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0));
 		alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 1));
-		assertEquals("0,0 BLUE Butterfly\n0,1 RED Butterfly\n", alpha.getPrintableBoard());
+		assertTrue(alpha.getPrintableBoard().contains("0,0 BLUE Butterfly\n"));
+		assertTrue(alpha.getPrintableBoard().contains("0,1 RED Butterfly\n"));
 	}
 	
+	/**
+	 * Method testBoard2.
+	 * @throws HantoException
+	 */
 	@Test
 	public void testBoard2() throws HantoException{
 		alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0));
 		alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(1, -1));
-		assertEquals("0,0 BLUE Butterfly\n1,-1 RED Butterfly\n", alpha.getPrintableBoard());
+		assertTrue(alpha.getPrintableBoard().contains("0,0 BLUE Butterfly\n"));
+		assertTrue(alpha.getPrintableBoard().contains("1,-1 RED Butterfly\n"));
 	}
 }

@@ -28,10 +28,15 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ */
 public class BetaGameTest {
 	HantoGame beta;
 	Map<HantoCoordinate, HantoPiece> pieceList;
 
+	/**
+	 * Method setUp.
+	 */
 	@Before
 	public void setUp() {
 		HantoGameFactory factory = HantoGameFactory.getInstance();
@@ -39,6 +44,10 @@ public class BetaGameTest {
 		pieceList = new HashMap<HantoCoordinate, HantoPiece>();
 	}
 
+	/**
+	 * Method findPieceTest.
+	 * @throws HantoException
+	 */
 	@Test
 	public void findPieceTest() throws HantoException{
 		assertTrue(beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 0)) == MoveResult.OK);
@@ -49,6 +58,10 @@ public class BetaGameTest {
 	}
 	
 	
+	/**
+	 * Method testMoveOntoAnotherPiece.
+	 * @throws HantoException
+	 */
 	@Test (expected = HantoException.class)
 	public void testMoveOntoAnotherPiece() throws HantoException{
 		assertTrue(beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 0)) == MoveResult.OK);
@@ -57,6 +70,10 @@ public class BetaGameTest {
 		
 	}
 	
+	/**
+	 * Method testCheckAdjacentPieces.
+	 * @throws HantoException
+	 */
 	@Test (expected = HantoException.class)
 	public void testCheckAdjacentPieces() throws HantoException{
 		beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 0));
@@ -66,6 +83,11 @@ public class BetaGameTest {
 		assertTrue(beta.getPieceAt(new Coordinate(3, 3)).equals(null));
 	}
 	
+	
+	/**
+	 * Method testButterflyPlacedByFourthMove.
+	 * @throws HantoException
+	 */
 	@Test (expected = HantoException.class)
 	public void testButterflyPlacedByFourthMove() throws HantoException{
 		beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 0));
@@ -77,6 +99,10 @@ public class BetaGameTest {
 		beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 6));
 	}
 	
+	/**
+	 * Method testFullGameToDraw.
+	 * @throws HantoException
+	 */
 	@Test
 	public void testFullGameToDraw() throws HantoException{
 		beta.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0));
@@ -93,12 +119,41 @@ public class BetaGameTest {
 		assertTrue(beta.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 11)) == MoveResult.DRAW);
 	}
 	
+	
+	/**
+	 * Method testThatPlayerCannotPlaceMultipleButterflies.
+	 * @throws HantoException
+	 */
 	@Test (expected = HantoException.class)
 	public void testThatPlayerCannotPlaceMultipleButterflies() throws HantoException{
 		beta.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0));
 		beta.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 1));
 		beta.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 2));
 
+	}
+	
+	/**
+	 * Method testBoard1.
+	 * @throws HantoException
+	 */
+	@Test
+	public void testBoard1() throws HantoException{
+		beta.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0));
+		beta.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 1));
+		assertTrue(beta.getPrintableBoard().contains("0,0 BLUE Butterfly\n"));
+		assertTrue(beta.getPrintableBoard().contains("0,1 RED Butterfly\n"));
+	}
+	
+	/**
+	 * Method testBoard2.
+	 * @throws HantoException
+	 */
+	@Test
+	public void testBoard2() throws HantoException{
+		beta.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0));
+		beta.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(1, -1));
+		assertTrue(beta.getPrintableBoard().contains("0,0 BLUE Butterfly\n"));
+		assertTrue(beta.getPrintableBoard().contains("1,-1 RED Butterfly\n"));
 	}
 
 
