@@ -15,19 +15,34 @@ import org.junit.Before;
 import org.junit.Test;
 import hanto.common.*;
 
+/**
+ * Tests for the HantoGameFactory
+ */
 public class HantoGameFactoryTest {
 	HantoGameFactory factory;
 
+	/**
+	 * Method setUp.
+     * Sets up the Hanto Game Factory
+	 */
 	@Before
 	public void setUp() {
 		factory = HantoGameFactory.getInstance();
 	}
 
+	/**
+	 * Method createAlphaGame.
+     * Creates the alpha game
+	 */
 	@Test
 	public void createAlphaGame() {
 		assertTrue(factory.makeHantoGame(HantoGameID.ALPHA_HANTO) instanceof hanto.studentjgasfm.alpha.AlphaGame);
 	}
 	
+	/**
+	 * Method createBetaGame.
+     * Creates the beta game
+	 */
 	@Test
 	public void createBetaGame(){
 		assertTrue(factory.makeHantoGame(HantoGameID.BETA_HANTO) instanceof hanto.studentjgasfm.beta.BetaGame);
