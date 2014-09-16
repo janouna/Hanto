@@ -29,6 +29,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
+ * Testing BetaGame
  */
 public class BetaGameTest {
 	HantoGame beta;
