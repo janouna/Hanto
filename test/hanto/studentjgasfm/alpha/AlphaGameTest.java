@@ -10,7 +10,7 @@
 package hanto.studentjgasfm.alpha;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+
 import hanto.HantoGameFactory;
 import hanto.common.HantoException;
 import hanto.common.HantoGame;
