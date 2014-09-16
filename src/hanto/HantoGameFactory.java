@@ -62,7 +62,6 @@ public class HantoGameFactory
 		case ALPHA_HANTO:
 			game = new hanto.studentjgasfm.alpha.AlphaGame();
 			break;
-			
 		case BETA_HANTO:
 			game = new hanto.studentjgasfm.beta.BetaGame(movesFirst);
 			break;
