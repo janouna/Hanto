@@ -19,19 +19,24 @@ public class Coordinate implements HantoCoordinate {
 
 	/**
 	 * Constructor for Coordinate.
-	 * @param x int
-	 * @param y int
+	 * 
+	 * @param x
+	 *            int
+	 * @param y
+	 *            int
 	 */
-	public Coordinate(int x, int y){
+	public Coordinate(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
 
 	/**
 	 * Constructor for Coordinate.
-	 * @param c HantoCoordinate
+	 * 
+	 * @param c
+	 *            HantoCoordinate
 	 */
-	public Coordinate(HantoCoordinate c){
+	public Coordinate(HantoCoordinate c) {
 		x = c.getX();
 		y = c.getY();
 	}
@@ -59,15 +64,14 @@ public class Coordinate implements HantoCoordinate {
 	public boolean equals(Object obj) {
 		boolean equals = false;
 
-		if (this == obj)
+		if (this == obj) {
 			equals = true;
-		else if(obj != null && getClass() == obj.getClass()){
+		} else if (obj != null && getClass() == obj.getClass()) {
 			Coordinate other = (Coordinate) obj;
 			if (x == other.x && y == other.y)
 				equals = true;
 		}
 		return equals;
 	}
-
 
 }
