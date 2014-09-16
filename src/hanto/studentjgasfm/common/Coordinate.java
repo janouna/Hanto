@@ -68,8 +68,9 @@ public class Coordinate implements HantoCoordinate {
 			equals = true;
 		} else if (obj != null && getClass() == obj.getClass()) {
 			Coordinate other = (Coordinate) obj;
-			if (x == other.x && y == other.y)
+			if (x == other.x && y == other.y) {
 				equals = true;
+			}
 		}
 		return equals;
 	}
