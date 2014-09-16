@@ -116,8 +116,6 @@ public class AlphaGameTest {
 	public void addRedInvalid2() throws HantoException{
 		alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0));
 		alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(-1, -1));
-
-
 	}
 	
 	/**
@@ -128,7 +126,6 @@ public class AlphaGameTest {
 	public void addRedInvalid3() throws HantoException{
 		alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0));
 		alpha.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(2, -3));
-
 	}
 	
 	/**
@@ -138,7 +135,6 @@ public class AlphaGameTest {
 	@Test (expected = HantoException.class)
 	public void addSparrow1() throws HantoException{
 		alpha.makeMove(HantoPieceType.SPARROW, null, new Coordinate(0, 0));
-
 	}
 	
 	/**
