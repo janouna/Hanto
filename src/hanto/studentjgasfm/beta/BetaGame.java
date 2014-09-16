@@ -84,7 +84,12 @@ public class BetaGame implements HantoGame {
 
 		if (getPieceAt(to) == null) {
 			if (moveCount == 1 && to.getX() == 0 && to.getY() == 0) {
+<<<<<<< HEAD
 				pieceList.put(new Coordinate(to), new Piece(player1Color, pieceType));
+=======
+				pieceList.put(new Coordinate(to), new Piece(player1Color,
+						pieceType));
+>>>>>>> d9bb07743759274b84712e199eaf54a6319e0ed5
 				decrementPieceType(pieceType, player1Color);
 
 				result = MoveResult.OK;
