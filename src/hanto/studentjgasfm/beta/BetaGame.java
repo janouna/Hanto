@@ -81,8 +81,10 @@ public class BetaGame implements HantoGame {
 			HantoCoordinate from, HantoCoordinate to) throws HantoException {
 
 		MoveResult result;
-
-		if (getPieceAt(to) == null) {
+		
+		if(from != null){
+			throw new HantoException("Piece cannot be moved, only placed");
+		}else if (getPieceAt(to) == null) {
 			if (moveCount == 1 && to.getX() == 0 && to.getY() == 0) {
 				pieceList.put(new Coordinate(to), new Piece(player1Color, pieceType));
 				decrementPieceType(pieceType, player1Color);
