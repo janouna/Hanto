@@ -44,7 +44,9 @@ public class AlphaGame implements HantoGame {
 			HantoCoordinate to) throws HantoException {
 		MoveResult result;
 
-		if(moveCount == 1 && to.getX() == 0 && to.getY() == 0 && pieceType == HantoPieceType.BUTTERFLY){
+		if(from != null){
+			throw new HantoException("Piece cannot be moved, only placed");
+		}else if(moveCount == 1 && to.getX() == 0 && to.getY() == 0 && pieceType == HantoPieceType.BUTTERFLY){
 			pieceList.put(new Coordinate(to), new Piece(HantoPlayerColor.BLUE, pieceType));
 			result = MoveResult.OK;
 		}else if(moveCount == 2 && isAdjacentToOrigin(to) && pieceType == HantoPieceType.BUTTERFLY){
