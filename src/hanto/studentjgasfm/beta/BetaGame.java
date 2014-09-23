@@ -12,25 +12,18 @@ package hanto.studentjgasfm.beta;
 import hanto.common.HantoCoordinate;
 import hanto.common.HantoException;
 import hanto.common.HantoGame;
-import hanto.common.HantoPiece;
 import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
 import hanto.common.MoveResult;
+import hanto.studentjgasfm.common.BaseHantoGame;
 import hanto.studentjgasfm.common.Coordinate;
 import hanto.studentjgasfm.common.Piece;
-
-import java.util.HashMap;
-
-import java.util.Map;
 
 /**
  * Second Hanto Variation
  */
-public class BetaGame implements HantoGame {
-	private Map<Coordinate, HantoPiece> pieceList;
-	private int moveCount, player1SparrowCount, player2SparrowCount;
-	private boolean player1ButterflyPlaced, player2ButterflyPlaced;
-	private HantoPlayerColor player1Color, player2Color;
+public class BetaGame extends BaseHantoGame implements HantoGame {
+	private int player1SparrowCount, player2SparrowCount;
 
 	/**
 	 * Constructor for BetaGame.
@@ -39,15 +32,9 @@ public class BetaGame implements HantoGame {
 	 *            HantoPlayerColor
 	 */
 	public BetaGame(HantoPlayerColor c) {
-		pieceList = new HashMap<Coordinate, HantoPiece>();
-		moveCount = 1;
-		player1Color = c;
-		player2Color = (player1Color == HantoPlayerColor.BLUE) ? HantoPlayerColor.RED
-				: HantoPlayerColor.BLUE;
+		super(c);
 		player2SparrowCount = 5;
 		player1SparrowCount = 5;
-		player1ButterflyPlaced = false;
-		player2ButterflyPlaced = false;
 	}
 
 	@Override
@@ -58,23 +45,6 @@ public class BetaGame implements HantoGame {
 		result = moveValidator(pieceType, from, to);
 
 		return result;
-	}
-
-	@Override
-	public HantoPiece getPieceAt(HantoCoordinate where) {
-		return pieceList.get(new Coordinate(where));
-	}
-
-	@Override
-	public String getPrintableBoard() {
-		String board = "";
-		for (Coordinate c : pieceList.keySet()) {
-			HantoPiece p = pieceList.get(c);
-			board += c.getX() + "," + c.getY() + " " + p.getColor() + " "
-					+ p.getType() + "\n";
-		}
-
-		return board;
 	}
 
 	private MoveResult moveValidator(HantoPieceType pieceType,
@@ -241,8 +211,4 @@ public class BetaGame implements HantoGame {
 
 		return hasPieceAdjacent;
 	}
-
-	
-
-
 }
