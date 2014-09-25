@@ -16,6 +16,8 @@ public abstract class BaseHantoGame implements HantoGame {
 	protected int moveCount;
 	protected boolean player1ButterflyPlaced, player2ButterflyPlaced;
 	protected HantoPlayerColor player1Color, player2Color;
+	protected Coordinate player1ButterflyLocation;
+	protected Coordinate player2ButterflyLocation;
 	
 	public BaseHantoGame(HantoPlayerColor c){
 		pieceList = new HashMap<Coordinate, HantoPiece>();
