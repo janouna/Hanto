@@ -147,7 +147,7 @@ public class BetaHantoMasterTest
 	{
 		game.makeMove(SPARROW, null, makeCoordinate(0, 0));	// Blue
 		game.makeMove(SPARROW, null, makeCoordinate(0, 1)); // Red
-		game.makeMove(SPARROW, makeCoordinate(0,0), makeCoordinate(0, -1));	// Blue
+		game.makeMove(SPARROW, makeCoordinate(0, 0), makeCoordinate(0, -1));	// Blue
 	}
 	
 	@Test(expected=HantoException.class)
@@ -170,7 +170,7 @@ public class BetaHantoMasterTest
 	{
 		game.makeMove(BUTTERFLY, null, makeCoordinate(0, 0));
 		game.makeMove(BUTTERFLY, null, makeCoordinate(0, -1));
-		game.makeMove(SPARROW, null, makeCoordinate(1,-1));
+		game.makeMove(SPARROW, null, makeCoordinate(1, -1));
 		game.makeMove(SPARROW, null, makeCoordinate(1, -2));
 		game.makeMove(SPARROW, null, makeCoordinate(0, -2));
 		game.makeMove(SPARROW, null, makeCoordinate(-1, -1));
