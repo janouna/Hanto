@@ -72,9 +72,9 @@ public abstract class BaseHantoGame implements HantoGame {
 		return result;
 	}
 	
-	private MoveResult getWinner(HantoPlayerColor color){
+	private MoveResult getWinner(HantoPlayerColor playerColor){
 		MoveResult result = null;
-		switch (color){
+		switch (playerColor){
 		case RED: result = MoveResult.RED_WINS; break;
 		case BLUE: result = MoveResult.BLUE_WINS; break;
 		}
