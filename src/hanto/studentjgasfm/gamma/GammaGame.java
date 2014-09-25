@@ -6,6 +6,7 @@ import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
 import hanto.common.MoveResult;
 import hanto.studentjgasfm.common.BaseHantoGame;
+import hanto.studentjgasfm.common.Coordinate;
 
 public class GammaGame extends BaseHantoGame {
 
@@ -20,5 +21,8 @@ public class GammaGame extends BaseHantoGame {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	
+	
 
 }

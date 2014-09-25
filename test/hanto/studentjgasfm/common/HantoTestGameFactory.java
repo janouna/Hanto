@@ -46,7 +46,7 @@ public class HantoTestGameFactory
 	 * @param gameId the version desired.
 	 * @return the game instance
 	 */
-	public HantoGame makeTestHantoGame(HantoGameID gameId)
+	public HantoGame makeHantoTestGame(HantoGameID gameId)
 	{
 		return makeHantoTestGame(gameId, HantoPlayerColor.BLUE);
 	}
