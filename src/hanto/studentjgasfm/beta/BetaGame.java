@@ -46,6 +46,7 @@ public class BetaGame extends BaseHantoGame implements HantoGame {
 		return result;
 	}
 
+	
 	private MoveResult moveValidator(HantoPieceType pieceType,
 			HantoCoordinate from, HantoCoordinate to) throws HantoException {
 
