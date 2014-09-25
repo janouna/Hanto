@@ -27,6 +27,7 @@ public abstract class BaseHantoGame implements HantoGame {
 				: HantoPlayerColor.BLUE;
 		player1ButterflyPlaced = false;
 		player2ButterflyPlaced = false;
+		
 	}
 	
 	@Override
@@ -48,4 +49,51 @@ public abstract class BaseHantoGame implements HantoGame {
 
 		return board;
 	}
+	
+	
+	
+	protected MoveResult isButterflyTrapped(MoveResult result){
+		boolean player1Wins = false;
+		boolean player2Wins = false;
+		if (player1ButterflyLocation != null)
+			player2Wins = isPieceTrapped(player1ButterflyLocation);
+		if(player2ButterflyLocation != null)
+			player1Wins = isPieceTrapped(player2ButterflyLocation);
+		
+		if (player2Wins){
+			switch (player2Color){
+			case RED: result = MoveResult.RED_WINS; break;
+			case BLUE: result = MoveResult.BLUE_WINS; break;
+			}
+		} else if(player1Wins){
+			switch(player1Color){
+			case RED: result = MoveResult.RED_WINS; break;
+			case BLUE: result = MoveResult.BLUE_WINS; break;
+			}
+		}
+		
+		return result;
+	}
+	
+	
+	protected boolean isPieceTrapped(HantoCoordinate to) {
+		HantoCoordinate oneUp = new Coordinate(to.getX(), to.getY() + 1);
+		HantoCoordinate oneDown = new Coordinate(to.getX(), to.getY() - 1);
+		HantoCoordinate leftUp = new Coordinate(to.getX() - 1, to.getY() + 1);
+		HantoCoordinate leftDown = new Coordinate(to.getX() - 1, to.getY());
+		HantoCoordinate rightUp = new Coordinate(to.getX() + 1, to.getY());
+		HantoCoordinate rightDown = new Coordinate(to.getX() + 1, to.getY() - 1);
+
+		boolean hasPieceAdjacent = pieceList.containsKey(oneUp)
+				&& pieceList.containsKey(oneDown)
+				&& pieceList.containsKey(leftUp)
+				&& pieceList.containsKey(leftDown)
+				&& pieceList.containsKey(rightUp)
+				&& pieceList.containsKey(rightDown);
+
+		return hasPieceAdjacent;
+	}
+	
+	
+	
 }

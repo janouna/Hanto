@@ -57,7 +57,7 @@ public class BetaGame extends BaseHantoGame implements HantoGame {
 		}else if (getPieceAt(to) == null) {
 			if (moveCount == 1 && to.getX() == 0 && to.getY() == 0) {
 				pieceList.put(new Coordinate(to), new Piece(player1Color, pieceType));
-				decrementPieceType(pieceType, player1Color);
+				decrementPieceType(pieceType, player1Color, to);
 
 				result = MoveResult.OK;
 				moveCount++;
@@ -68,7 +68,7 @@ public class BetaGame extends BaseHantoGame implements HantoGame {
 				} else {
 					pieceList.put(new Coordinate(to), new Piece(player1Color,
 							pieceType));
-					decrementPieceType(pieceType, player1Color);
+					decrementPieceType(pieceType, player1Color, to);
 					result = MoveResult.OK;
 					moveCount++;
 				}
@@ -79,7 +79,7 @@ public class BetaGame extends BaseHantoGame implements HantoGame {
 				} else {
 					pieceList.put(new Coordinate(to), new Piece(player2Color,
 							pieceType));
-					decrementPieceType(pieceType, player2Color);
+					decrementPieceType(pieceType, player2Color, to);
 					result = MoveResult.OK;
 					moveCount++;
 				}
@@ -89,7 +89,7 @@ public class BetaGame extends BaseHantoGame implements HantoGame {
 								.equals(HantoPieceType.BUTTERFLY) && !player1ButterflyPlaced))) {
 					pieceList.put(new Coordinate(to), new Piece(player1Color,
 							pieceType));
-					decrementPieceType(pieceType, player1Color);
+					decrementPieceType(pieceType, player1Color, to);
 					result = MoveResult.OK;
 					moveCount++;
 				} else if (moveCount % 2 == 0
@@ -97,7 +97,7 @@ public class BetaGame extends BaseHantoGame implements HantoGame {
 								.equals(HantoPieceType.BUTTERFLY) && !player2ButterflyPlaced))) {
 					pieceList.put(new Coordinate(to), new Piece(player2Color,
 							pieceType));
-					decrementPieceType(pieceType, player2Color);
+					decrementPieceType(pieceType, player2Color, to);
 					result = MoveResult.OK;
 					moveCount++;
 				} else {
@@ -117,28 +117,30 @@ public class BetaGame extends BaseHantoGame implements HantoGame {
 			result = MoveResult.DRAW;
 		}
 
-		result = isButterflyTrapped(to, result);
+		result = isButterflyTrapped(result);
+		System.out.println(result);
 
 		return result;
 	}
 
+	
 	private void decrementPieceType(HantoPieceType pieceType,
-			HantoPlayerColor playerColor) {
-		if (pieceType.equals(HantoPieceType.BUTTERFLY)) {
-			if (playerColor.equals(player1Color)) {
-				player1ButterflyPlaced = true;
-			} else {
-				player2ButterflyPlaced = true;
-			}
-		} else if (pieceType.equals(HantoPieceType.SPARROW)) {
-			if (playerColor.equals(player1Color)) {
-				player1SparrowCount -= 1;
-			} else {
-				player2SparrowCount -= 1;
-			}
+			HantoPlayerColor playerColor, HantoCoordinate to) {
+		
+		switch (pieceType){
+		
+			case BUTTERFLY: setButterflyPlaced(playerColor, to);
+							break;
+							
+			case SPARROW: setSparrowPlaced(playerColor);
+						  break;
+			default:
+				break;
+			
 		}
 
 	}
+
 
 	private boolean hasAdjacentPiece(HantoCoordinate to) {
 		HantoCoordinate oneUp = new Coordinate(to.getX(), to.getY() + 1);
@@ -158,57 +160,26 @@ public class BetaGame extends BaseHantoGame implements HantoGame {
 		return hasPieceAdjacent;
 	}
 	
-	private MoveResult isButterflyTrapped(HantoCoordinate to, MoveResult result){
-		HantoCoordinate oneUp = new Coordinate(to.getX(), to.getY() + 1);
-		HantoCoordinate oneDown = new Coordinate(to.getX(), to.getY() - 1);
-		HantoCoordinate leftUp = new Coordinate(to.getX() - 1, to.getY() + 1);
-		HantoCoordinate leftDown = new Coordinate(to.getX() - 1, to.getY());
-		HantoCoordinate rightUp = new Coordinate(to.getX() + 1, to.getY());
-		HantoCoordinate rightDown = new Coordinate(to.getX() + 1, to.getY() - 1);
-		
-		if(isPieceTrapped(oneUp) && pieceList.get(oneUp).getType().equals(HantoPieceType.BUTTERFLY)){
-			result = colorOfWinner(oneUp);
-		}else if(isPieceTrapped(oneUp) && pieceList.get(oneDown).getType().equals(HantoPieceType.BUTTERFLY)){
-			result = colorOfWinner(oneUp);
-		}
-		else if(isPieceTrapped(leftUp) && pieceList.get(leftUp).getType().equals(HantoPieceType.BUTTERFLY)){
-			result = colorOfWinner(leftUp);
-		}
-		else if(isPieceTrapped(leftDown) && pieceList.get(leftDown).getType().equals(HantoPieceType.BUTTERFLY)){
-			result = colorOfWinner(leftDown);
-		}
-		else if(isPieceTrapped(rightUp) && pieceList.get(rightUp).getType().equals(HantoPieceType.BUTTERFLY)){
-			result = colorOfWinner(rightUp);
-		}else if(isPieceTrapped(rightDown) && pieceList.get(rightDown).getType().equals(HantoPieceType.BUTTERFLY)){
-			result = colorOfWinner(rightDown);
-		}
-		
-		return result;
-	}
 	
-	private MoveResult colorOfWinner(HantoCoordinate pieceCoordinate) {
-		if(pieceList.get(pieceCoordinate).getColor().equals(HantoPlayerColor.BLUE)){
-			return MoveResult.RED_WINS;
-		}else{
-			return MoveResult.BLUE_WINS;
+
+	
+	
+	private void setSparrowPlaced(HantoPlayerColor playerColor) {
+		if (playerColor.equals(player1Color)) {
+			player1SparrowCount -= 1;
+		} else {
+			player2SparrowCount -= 1;
 		}
 	}
 
-	private boolean isPieceTrapped(HantoCoordinate to) {
-		HantoCoordinate oneUp = new Coordinate(to.getX(), to.getY() + 1);
-		HantoCoordinate oneDown = new Coordinate(to.getX(), to.getY() - 1);
-		HantoCoordinate leftUp = new Coordinate(to.getX() - 1, to.getY() + 1);
-		HantoCoordinate leftDown = new Coordinate(to.getX() - 1, to.getY());
-		HantoCoordinate rightUp = new Coordinate(to.getX() + 1, to.getY());
-		HantoCoordinate rightDown = new Coordinate(to.getX() + 1, to.getY() - 1);
-
-		boolean hasPieceAdjacent = pieceList.containsKey(oneUp)
-				&& pieceList.containsKey(oneDown)
-				&& pieceList.containsKey(leftUp)
-				&& pieceList.containsKey(leftDown)
-				&& pieceList.containsKey(rightUp)
-				&& pieceList.containsKey(rightDown);
-
-		return hasPieceAdjacent;
+	private void setButterflyPlaced(HantoPlayerColor playerColor, HantoCoordinate to) {
+		if (playerColor.equals(player1Color)) {
+			player1ButterflyPlaced = true;
+			player1ButterflyLocation = new Coordinate(to);
+		} else if(playerColor.equals(player2Color)) {
+			player2ButterflyPlaced = true;
+			player2ButterflyLocation = new Coordinate(to);
+		}
 	}
+
 }
