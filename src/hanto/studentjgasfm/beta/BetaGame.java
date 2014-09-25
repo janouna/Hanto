@@ -118,7 +118,6 @@ public class BetaGame extends BaseHantoGame implements HantoGame {
 		}
 
 		result = isButterflyTrapped(result);
-		System.out.println(result);
 
 		return result;
 	}
