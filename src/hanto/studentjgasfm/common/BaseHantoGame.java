@@ -55,21 +55,28 @@ public abstract class BaseHantoGame implements HantoGame {
 	protected MoveResult isButterflyTrapped(MoveResult result){
 		boolean player1Wins = false;
 		boolean player2Wins = false;
-		if (player1ButterflyLocation != null)
+		
+		if (player1ButterflyLocation != null){
 			player2Wins = isPieceTrapped(player1ButterflyLocation);
-		if(player2ButterflyLocation != null)
+		}
+		if(player2ButterflyLocation != null){
 			player1Wins = isPieceTrapped(player2ButterflyLocation);
+		}
 		
 		if (player2Wins){
-			switch (player2Color){
-			case RED: result = MoveResult.RED_WINS; break;
-			case BLUE: result = MoveResult.BLUE_WINS; break;
-			}
+			result = getWinner(player2Color);
 		} else if(player1Wins){
-			switch(player1Color){
-			case RED: result = MoveResult.RED_WINS; break;
-			case BLUE: result = MoveResult.BLUE_WINS; break;
-			}
+			result = getWinner(player1Color);
+		}
+		
+		return result;
+	}
+	
+	private MoveResult getWinner(HantoPlayerColor color){
+		MoveResult result = null;
+		switch (color){
+		case RED: result = MoveResult.RED_WINS; break;
+		case BLUE: result = MoveResult.BLUE_WINS; break;
 		}
 		
 		return result;
