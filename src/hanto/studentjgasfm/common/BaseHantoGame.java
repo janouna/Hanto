@@ -28,6 +28,7 @@ public abstract class BaseHantoGame implements HantoGame {
 	protected HantoPlayerColor player1Color, player2Color;
 	protected Coordinate player1ButterflyLocation;
 	protected Coordinate player2ButterflyLocation;
+	protected int player1SparrowCount, player2SparrowCount;
 	
 	public BaseHantoGame(HantoPlayerColor c){
 		pieceList = new HashMap<Coordinate, HantoPiece>();
@@ -109,6 +110,61 @@ public abstract class BaseHantoGame implements HantoGame {
 				&& pieceList.containsKey(rightDown);
 
 		return hasPieceAdjacent;
+	}
+	
+	protected boolean hasAdjacentPiece(HantoCoordinate to) {
+		HantoCoordinate oneUp = new Coordinate(to.getX(), to.getY() + 1);
+		HantoCoordinate oneDown = new Coordinate(to.getX(), to.getY() - 1);
+		HantoCoordinate leftUp = new Coordinate(to.getX() - 1, to.getY() + 1);
+		HantoCoordinate leftDown = new Coordinate(to.getX() - 1, to.getY());
+		HantoCoordinate rightUp = new Coordinate(to.getX() + 1, to.getY());
+		HantoCoordinate rightDown = new Coordinate(to.getX() + 1, to.getY() - 1);
+
+		boolean hasPieceAdjacent = pieceList.containsKey(oneUp)
+				|| pieceList.containsKey(oneDown)
+				|| pieceList.containsKey(leftUp)
+				|| pieceList.containsKey(leftDown)
+				|| pieceList.containsKey(rightUp)
+				|| pieceList.containsKey(rightDown);
+
+		return hasPieceAdjacent;
+	}
+	
+	
+	protected void setSparrowPlaced(HantoPlayerColor playerColor) {
+		if (playerColor.equals(player1Color)) {
+			player1SparrowCount -= 1;
+		} else {
+			player2SparrowCount -= 1;
+		}
+	}
+
+	protected void setButterflyPlaced(HantoPlayerColor playerColor, HantoCoordinate to) {
+		if (playerColor.equals(player1Color)) {
+			player1ButterflyPlaced = true;
+			player1ButterflyLocation = new Coordinate(to);
+		} else if(playerColor.equals(player2Color)) {
+			player2ButterflyPlaced = true;
+			player2ButterflyLocation = new Coordinate(to);
+		}
+	}
+	
+	
+	protected void decrementPieceType(HantoPieceType pieceType,
+			HantoPlayerColor playerColor, HantoCoordinate to) {
+		
+		switch (pieceType){
+		
+			case BUTTERFLY: setButterflyPlaced(playerColor, to);
+							break;
+							
+			case SPARROW: setSparrowPlaced(playerColor);
+						  break;
+			default:
+				break;
+			
+		}
+
 	}
 	
 	
