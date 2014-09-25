@@ -23,7 +23,6 @@ import hanto.studentjgasfm.common.Piece;
  * Second Hanto Variation
  */
 public class BetaGame extends BaseHantoGame implements HantoGame {
-	private int player1SparrowCount, player2SparrowCount;
 
 	/**
 	 * Constructor for BetaGame.
@@ -121,64 +120,7 @@ public class BetaGame extends BaseHantoGame implements HantoGame {
 
 		return result;
 	}
-
-	
-	private void decrementPieceType(HantoPieceType pieceType,
-			HantoPlayerColor playerColor, HantoCoordinate to) {
-		
-		switch (pieceType){
-		
-			case BUTTERFLY: setButterflyPlaced(playerColor, to);
-							break;
-							
-			case SPARROW: setSparrowPlaced(playerColor);
-						  break;
-			default:
-				break;
-			
-		}
-
-	}
-
-
-	private boolean hasAdjacentPiece(HantoCoordinate to) {
-		HantoCoordinate oneUp = new Coordinate(to.getX(), to.getY() + 1);
-		HantoCoordinate oneDown = new Coordinate(to.getX(), to.getY() - 1);
-		HantoCoordinate leftUp = new Coordinate(to.getX() - 1, to.getY() + 1);
-		HantoCoordinate leftDown = new Coordinate(to.getX() - 1, to.getY());
-		HantoCoordinate rightUp = new Coordinate(to.getX() + 1, to.getY());
-		HantoCoordinate rightDown = new Coordinate(to.getX() + 1, to.getY() - 1);
-
-		boolean hasPieceAdjacent = pieceList.containsKey(oneUp)
-				|| pieceList.containsKey(oneDown)
-				|| pieceList.containsKey(leftUp)
-				|| pieceList.containsKey(leftDown)
-				|| pieceList.containsKey(rightUp)
-				|| pieceList.containsKey(rightDown);
-
-		return hasPieceAdjacent;
-	}
-	
 	
 
-	
-	
-	private void setSparrowPlaced(HantoPlayerColor playerColor) {
-		if (playerColor.equals(player1Color)) {
-			player1SparrowCount -= 1;
-		} else {
-			player2SparrowCount -= 1;
-		}
-	}
-
-	private void setButterflyPlaced(HantoPlayerColor playerColor, HantoCoordinate to) {
-		if (playerColor.equals(player1Color)) {
-			player1ButterflyPlaced = true;
-			player1ButterflyLocation = new Coordinate(to);
-		} else if(playerColor.equals(player2Color)) {
-			player2ButterflyPlaced = true;
-			player2ButterflyLocation = new Coordinate(to);
-		}
-	}
 
 }
