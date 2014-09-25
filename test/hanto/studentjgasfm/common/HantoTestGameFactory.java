@@ -11,9 +11,9 @@
 package hanto.studentjgasfm.common;
 
 import hanto.common.*;
-import hanto.HantoGameFactory;
-import hanto.studentjgasfm.alpha.AlphaGame;
-import hanto.studentjgasfm.beta.BetaGame;
+
+
+
 import hanto.studentjgasfm.gamma.GammaHantoTestGame;
 
 /**
