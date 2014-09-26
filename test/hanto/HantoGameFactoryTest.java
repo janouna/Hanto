@@ -14,7 +14,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
+
 import hanto.common.*;
+import hanto.studentjgasfm.common.HantoGameFactory;
 
 /**
  * Tests for the HantoGameFactory

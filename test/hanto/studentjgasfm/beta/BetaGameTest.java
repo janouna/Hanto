@@ -10,8 +10,6 @@
 package hanto.studentjgasfm.beta;
 
 import static org.junit.Assert.assertTrue;
-
-import hanto.HantoGameFactory;
 import hanto.common.HantoCoordinate;
 import hanto.common.HantoException;
 import hanto.common.HantoGame;
@@ -21,6 +19,7 @@ import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
 import hanto.common.MoveResult;
 import hanto.studentjgasfm.common.Coordinate;
+import hanto.studentjgasfm.common.HantoGameFactory;
 
 import java.util.HashMap;
 import java.util.Map;

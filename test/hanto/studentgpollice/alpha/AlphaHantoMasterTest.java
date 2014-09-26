@@ -14,7 +14,8 @@ import static org.junit.Assert.*;
 import static hanto.common.HantoPieceType.*;
 import static hanto.common.MoveResult.*;
 import hanto.common.*;
-import hanto.HantoGameFactory;
+import hanto.studentjgasfm.common.HantoGameFactory;
+
 import org.junit.*;
 
 public class AlphaHantoMasterTest
