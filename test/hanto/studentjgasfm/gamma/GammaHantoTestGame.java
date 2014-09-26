@@ -18,12 +18,12 @@ import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
 import hanto.common.MoveResult;
 
-public class GammaHantoTestGame implements HantoGame {
+public class GammaHantoTestGame extends GammaGame implements HantoGame {
 
 	public GammaHantoTestGame(HantoPlayerColor c) {
-		// TODO Auto-generated constructor stub
+		super(c);
 	}
-
+/*
 	@Override
 	public MoveResult makeMove(HantoPieceType pieceType, HantoCoordinate from,
 			HantoCoordinate to) throws HantoException {
@@ -42,5 +42,5 @@ public class GammaHantoTestGame implements HantoGame {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+*/
 }
