@@ -30,7 +30,7 @@ public abstract class BaseHantoGame implements HantoGame {
 	protected Coordinate player2ButterflyLocation;
 	protected int player1SparrowCount, player2SparrowCount;
 	
-	public BaseHantoGame(HantoPlayerColor c){
+	protected BaseHantoGame(HantoPlayerColor c){
 		pieceList = new HashMap<Coordinate, HantoPiece>();
 		moveCount = 1;
 		player1Color = c;
@@ -137,8 +137,10 @@ public abstract class BaseHantoGame implements HantoGame {
 	private MoveResult getWinner(HantoPlayerColor playerColor){
 		MoveResult result = null;
 		switch (playerColor){
-		case RED: result = MoveResult.RED_WINS; break;
-		case BLUE: result = MoveResult.BLUE_WINS; break;
+		case RED: result = MoveResult.RED_WINS; 
+		break;
+		case BLUE: result = MoveResult.BLUE_WINS; 
+		break;
 		}
 		
 		return result;
@@ -163,8 +165,9 @@ public abstract class BaseHantoGame implements HantoGame {
 	}
 	
 	protected void playerTurn(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to, HantoPlayerColor color){
-		if(from != null)
+		if(from != null){
 			pieceList.remove(new Coordinate(from));
+		}
 		pieceList.put(new Coordinate(to), new Piece(color, pieceType));
 		piecePlaced(pieceType, color, to);
 		moveCount++;
