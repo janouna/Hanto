@@ -135,17 +135,56 @@ public abstract class BaseHantoGame implements HantoGame {
 	}
 	
 	protected boolean isConnected(HantoCoordinate to){
-		/*List<Coordinate> reachable = new LinkedList<Coordinate>();
+		List<Coordinate> reachable = new LinkedList<Coordinate>();
 		List<Coordinate> toExplore = new ArrayList<Coordinate>();
 		
 		reachable.add(new Coordinate(to));
 		toExplore.add(new Coordinate(to));
 		
 		while(!toExplore.isEmpty()){
-			Coordinate x = toExplore.get()
-		}*/
+			Coordinate x = toExplore.get(0);
+			toExplore.remove(0);
+			for(Coordinate i: getAdjacentPieceList(x)){
+				if(!reachable.contains(i)){
+					toExplore.add(i);
+					reachable.add(i);
+				}
+			}
+		}
 		
-		return false;
+		if(reachable.size() == pieceList.keySet().size())
+			return true;
+		else
+			return false;
+	}
+	private List<Coordinate> getAdjacentPieceList(Coordinate to){
+		List<Coordinate> l = new LinkedList<Coordinate>();
+		
+		for(Coordinate i: getAdjacentSpaces(to)){
+			if(pieceList.containsKey(i)){
+				l.add(i);
+			}
+		}
+		return l;
+	}
+	private List<Coordinate> getAdjacentSpaces(Coordinate to){
+		List<Coordinate> l = new LinkedList<Coordinate>();
+		
+		Coordinate oneUp = new Coordinate(to.getX(), to.getY() + 1);
+		Coordinate oneDown = new Coordinate(to.getX(), to.getY() - 1);
+		Coordinate leftUp = new Coordinate(to.getX() - 1, to.getY() + 1);
+		Coordinate leftDown = new Coordinate(to.getX() - 1, to.getY());
+		Coordinate rightUp = new Coordinate(to.getX() + 1, to.getY());
+		Coordinate rightDown = new Coordinate(to.getX() + 1, to.getY() - 1);
+		
+		l.add(oneUp);
+		l.add(oneDown);
+		l.add(leftUp);
+		l.add(leftDown);
+		l.add(rightUp);
+		l.add(rightDown);
+		
+		return l;		
 	}
 	
 	protected boolean isPieceTrapped(HantoCoordinate to) {
