@@ -10,8 +10,6 @@
 package hanto.studentjgasfm.alpha;
 
 import static org.junit.Assert.assertTrue;
-
-import hanto.HantoGameFactory;
 import hanto.common.HantoException;
 import hanto.common.HantoGame;
 import hanto.common.HantoGameID;
@@ -20,6 +18,7 @@ import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
 import hanto.common.MoveResult;
 import hanto.studentjgasfm.common.Coordinate;
+import hanto.studentjgasfm.common.HantoGameFactory;
 
 import org.junit.Before;
 import org.junit.Test;

@@ -15,7 +15,8 @@ import static hanto.common.MoveResult.*;
 import static hanto.common.HantoPlayerColor.*;
 import static org.junit.Assert.*;
 import hanto.common.*;
-import hanto.HantoGameFactory;
+import hanto.studentjgasfm.common.HantoGameFactory;
+
 import org.junit.*;
 
 /**
