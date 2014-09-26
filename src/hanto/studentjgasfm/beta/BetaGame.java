@@ -16,8 +16,6 @@ import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
 import hanto.common.MoveResult;
 import hanto.studentjgasfm.common.BaseHantoGame;
-import hanto.studentjgasfm.common.Coordinate;
-import hanto.studentjgasfm.common.Piece;
 
 /**
  * Second Hanto Variation
@@ -42,86 +40,11 @@ public class BetaGame extends BaseHantoGame implements HantoGame {
 		MoveResult result;
 
 		result = moveValidator(pieceType, from, to);
-
-		return result;
-	}
-
-	
-	private MoveResult moveValidator(HantoPieceType pieceType,
-			HantoCoordinate from, HantoCoordinate to) throws HantoException {
-
-		MoveResult result;
 		
-		if(from != null){
-			throw new HantoException("Piece cannot be moved, only placed");
-		}else if (getPieceAt(to) == null) {
-			if (moveCount == 1 && to.getX() == 0 && to.getY() == 0) {
-				pieceList.put(new Coordinate(to), new Piece(player1Color, pieceType));
-				decrementPieceType(pieceType, player1Color, to);
-
-				result = MoveResult.OK;
-				moveCount++;
-			} else if (moveCount == 7 && !player1ButterflyPlaced) {
-				if (!pieceType.equals(HantoPieceType.BUTTERFLY)) {
-					throw new HantoException(
-							"Invalid Piece, Butterfly must be placed by fourth move");
-				} else {
-					pieceList.put(new Coordinate(to), new Piece(player1Color,
-							pieceType));
-					decrementPieceType(pieceType, player1Color, to);
-					result = MoveResult.OK;
-					moveCount++;
-				}
-			} else if (moveCount == 8 && !player2ButterflyPlaced) {
-				if (!pieceType.equals(HantoPieceType.BUTTERFLY)) {
-					throw new HantoException(
-							"Invalid Piece, Butterfly must be placed by fourth move");
-				} else {
-					pieceList.put(new Coordinate(to), new Piece(player2Color,
-							pieceType));
-					decrementPieceType(pieceType, player2Color, to);
-					result = MoveResult.OK;
-					moveCount++;
-				}
-			} else if (hasAdjacentPiece(to)) {
-				if (moveCount % 2 == 1
-						&& ((pieceType.equals(HantoPieceType.SPARROW) && player1SparrowCount != 0) || (pieceType
-								.equals(HantoPieceType.BUTTERFLY) && !player1ButterflyPlaced))) {
-					pieceList.put(new Coordinate(to), new Piece(player1Color,
-							pieceType));
-					decrementPieceType(pieceType, player1Color, to);
-					result = MoveResult.OK;
-					moveCount++;
-				} else if (moveCount % 2 == 0
-						&& ((pieceType.equals(HantoPieceType.SPARROW) && player2SparrowCount != 0) || (pieceType
-								.equals(HantoPieceType.BUTTERFLY) && !player2ButterflyPlaced))) {
-					pieceList.put(new Coordinate(to), new Piece(player2Color,
-							pieceType));
-					decrementPieceType(pieceType, player2Color, to);
-					result = MoveResult.OK;
-					moveCount++;
-				} else {
-					throw new HantoException("No more of that piece remain");
-				}
-			} else {
-				throw new HantoException("Invalid Position " + to.getX() + ","
-						+ to.getY());
-			}
-		} else {
-			throw new HantoException(
-					"Invalid from position; pieces may only be placed, not moved");
-		}
-
-		if (player1SparrowCount == 0 && player2SparrowCount == 0
-				&& player1ButterflyPlaced && player2ButterflyPlaced) {
+		if (player1SparrowCount == 0 && player2SparrowCount == 0 && player1ButterflyPlaced && player2ButterflyPlaced && result == MoveResult.OK) {
 			result = MoveResult.DRAW;
 		}
 
-		result = isButterflyTrapped(result);
-
 		return result;
 	}
-	
-
-
 }
