@@ -10,7 +10,10 @@
 
 package hanto.studentjgasfm.common;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import hanto.common.HantoCoordinate;
@@ -68,19 +71,17 @@ public abstract class BaseHantoGame implements HantoGame {
 		int sparrowCount = moveCount % 2 == 1 ? player1SparrowCount : player2SparrowCount;
 		boolean butterflyPlaced = moveCount % 2 == 1 ? player1ButterflyPlaced : player2ButterflyPlaced;
 		
-		if(from != null){
-			throw new HantoException("Piece cannot be moved, only placed");
-		}else if (getPieceAt(to) == null) {
-			if (moveCount == 1 && to.getX() == 0 && to.getY() == 0) {
+		if (getPieceAt(to) == null) {
+			if (moveCount == 1 && to.getX() == 0 && to.getY() == 0) { // First Move must be at 0,0
 				playerTurn(pieceType, from, to, color);
-			} else if ((moveCount == 7 && !player1ButterflyPlaced) || (moveCount == 8 && !player2ButterflyPlaced)) {
+			} else if ((moveCount == 7 && !player1ButterflyPlaced) || (moveCount == 8 && !player2ButterflyPlaced)) { // 4th move of each player, butterfly must be or have been placed
 				if (!pieceType.equals(HantoPieceType.BUTTERFLY)) {
 					throw new HantoException(
 							"Invalid Piece, Butterfly must be placed by fourth move");
 				} else {
 					playerTurn(pieceType, from, to, color);
 				}
-			} else if (hasAdjacentPiece(to)) {
+			} else if (hasAdjacentPiece(to)) { // Piece must have adjacent piece.
 				if((pieceType.equals(HantoPieceType.SPARROW) && sparrowCount != 0) || (pieceType.equals(HantoPieceType.BUTTERFLY) && !butterflyPlaced)){
 					playerTurn(pieceType, from, to, color);
 				} else {
@@ -90,12 +91,61 @@ public abstract class BaseHantoGame implements HantoGame {
 				throw new HantoException("Invalid Position " + to.getX() + "," + to.getY());
 			}
 		} else {
-			throw new HantoException("Invalid from position; pieces may only be placed, not moved");
+			throw new HantoException("Invalid to position: occupied");
 		}
 		
 		result = isButterflyTrapped(result);
 		
 		return result;
+	}
+	protected void playerTurn(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to, HantoPlayerColor color){
+		if(from != null){
+			pieceList.remove(new Coordinate(from));
+		}
+		pieceList.put(new Coordinate(to), new Piece(color, pieceType));
+		piecePlaced(pieceType, color, to);
+		moveCount++;
+	}
+	protected void piecePlaced(HantoPieceType pieceType,
+			HantoPlayerColor playerColor, HantoCoordinate to) {
+		switch (pieceType){
+			case BUTTERFLY: butterflyPlaced(playerColor, to);
+							break;
+			case SPARROW: sparrowPlaced(playerColor);
+						  break;
+			default:
+				break;
+		}
+	}
+	protected void sparrowPlaced(HantoPlayerColor playerColor) {
+		if (playerColor.equals(player1Color)) {
+			player1SparrowCount -= 1;
+		} else {
+			player2SparrowCount -= 1;
+		}
+	}
+	protected void butterflyPlaced(HantoPlayerColor playerColor, HantoCoordinate to) {
+		if (playerColor.equals(player1Color)) {
+			player1ButterflyPlaced = true;
+			player1ButterflyLocation = new Coordinate(to);
+		} else if(playerColor.equals(player2Color)) {
+			player2ButterflyPlaced = true;
+			player2ButterflyLocation = new Coordinate(to);
+		}
+	}
+	
+	protected boolean isConnected(HantoCoordinate to){
+		/*List<Coordinate> reachable = new LinkedList<Coordinate>();
+		List<Coordinate> toExplore = new ArrayList<Coordinate>();
+		
+		reachable.add(new Coordinate(to));
+		toExplore.add(new Coordinate(to));
+		
+		while(!toExplore.isEmpty()){
+			Coordinate x = toExplore.get()
+		}*/
+		
+		return false;
 	}
 	
 	protected boolean isPieceTrapped(HantoCoordinate to) {
@@ -162,41 +212,5 @@ public abstract class BaseHantoGame implements HantoGame {
 				|| pieceList.containsKey(rightDown);
 
 		return hasPieceAdjacent;
-	}
-	
-	protected void playerTurn(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to, HantoPlayerColor color){
-		if(from != null){
-			pieceList.remove(new Coordinate(from));
-		}
-		pieceList.put(new Coordinate(to), new Piece(color, pieceType));
-		piecePlaced(pieceType, color, to);
-		moveCount++;
-	}
-	protected void piecePlaced(HantoPieceType pieceType,
-			HantoPlayerColor playerColor, HantoCoordinate to) {
-		switch (pieceType){
-			case BUTTERFLY: butterflyPlaced(playerColor, to);
-							break;
-			case SPARROW: sparrowPlaced(playerColor);
-						  break;
-			default:
-				break;
-		}
-	}
-	protected void sparrowPlaced(HantoPlayerColor playerColor) {
-		if (playerColor.equals(player1Color)) {
-			player1SparrowCount -= 1;
-		} else {
-			player2SparrowCount -= 1;
-		}
-	}
-	protected void butterflyPlaced(HantoPlayerColor playerColor, HantoCoordinate to) {
-		if (playerColor.equals(player1Color)) {
-			player1ButterflyPlaced = true;
-			player1ButterflyLocation = new Coordinate(to);
-		} else if(playerColor.equals(player2Color)) {
-			player2ButterflyPlaced = true;
-			player2ButterflyLocation = new Coordinate(to);
-		}
 	}
 }

@@ -38,7 +38,10 @@ public class BetaGame extends BaseHantoGame implements HantoGame {
 	public MoveResult makeMove(HantoPieceType pieceType, HantoCoordinate from,
 			HantoCoordinate to) throws HantoException {
 		MoveResult result;
-
+		
+		if(from != null){
+			throw new HantoException("Piece cannot be moved, only placed");
+		}
 		result = moveValidator(pieceType, from, to);
 		
 		if (player1SparrowCount == 0 && player2SparrowCount == 0 && player1ButterflyPlaced && player2ButterflyPlaced && result == MoveResult.OK) {
