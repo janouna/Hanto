@@ -10,6 +10,7 @@
 package hanto.studentjgasfm.common;
 
 import hanto.common.HantoCoordinate;
+import hanto.studentjgasfm.common.BaseHantoGame;
 
 /**
  * Implements HantoCoordinate and changes Hashcode and Equals methods
@@ -45,7 +46,6 @@ public class Coordinate implements HantoCoordinate {
 	public int getX() {
 		return x;
 	}
-
 	@Override
 	public int getY() {
 		return y;
@@ -59,7 +59,6 @@ public class Coordinate implements HantoCoordinate {
 		result = prime * result + y;
 		return result;
 	}
-
 	@Override
 	public boolean equals(Object obj) {
 		boolean equals = false;
@@ -75,4 +74,7 @@ public class Coordinate implements HantoCoordinate {
 		return equals;
 	}
 
+	public boolean isAdjacent(HantoCoordinate c){
+		return BaseHantoGame.getAdjacentSpaces(this).contains(new Coordinate(c));
+	}
 }
