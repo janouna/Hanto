@@ -33,71 +33,86 @@ public class GammaGame extends BaseHantoGame {
 		return null;
 	}
 	
-	public MoveResult walk(HantoCoordinate to, HantoCoordinate from) throws HantoException{
-		MoveResult result;
+	private MoveResult walk(HantoCoordinate to, HantoCoordinate from) throws HantoException{
+		MoveResult result; // TODO Actually need to move piece at some point...
+		/*
 		if(isMovingUpRight(to, from) && (isSpaceOpen(new Coordinate(from.getX(), from.getY() + 1)) ||
-										isSpaceOpen(new Coordinate(from.getX() +1, from.getY() -1)))){
+										isSpaceOpen(new Coordinate(from.getX() + 1, from.getY() - 1)))){
 			result = MoveResult.OK;
-		} else if(isMovingDownRight(to, from) && (isSpaceOpen(new Coordinate(from.getX()+1, from.getY() )) ||
-										          isSpaceOpen(new Coordinate(from.getX(), from.getY() -1)))){
+		} else if(isMovingDownRight(to, from) && (isSpaceOpen(new Coordinate(from.getX() + 1, from.getY() )) ||
+										          isSpaceOpen(new Coordinate(from.getX(), from.getY() - 1)))){
 			result = MoveResult.OK;
-		} else if(isMovingDownStraight(to, from) && (isSpaceOpen(new Coordinate(from.getX()+1, from.getY() -1 )) ||
+		} else if(isMovingDownStraight(to, from) && (isSpaceOpen(new Coordinate(from.getX() + 1, from.getY() - 1 )) ||
 		          								     isSpaceOpen(new Coordinate(from.getX() - 1, from.getY())))){
 		    result = MoveResult.OK;
-		} else if(isMovingDownLeft(to, from) && (isSpaceOpen(new Coordinate(from.getX()-1, from.getY() + 1 )) ||
-				     						         isSpaceOpen(new Coordinate(from.getX(), from.getY() -1)))){
+		} else if(isMovingDownLeft(to, from) && (isSpaceOpen(new Coordinate(from.getX() - 1, from.getY() + 1 )) ||
+				     						         isSpaceOpen(new Coordinate(from.getX(), from.getY() - 1)))){
 			result = MoveResult.OK;
-		}else if(isMovingUpLeft(to, from) && (isSpaceOpen(new Coordinate(from.getX()-1, from.getY())) ||
-											  isSpaceOpen(new Coordinate(from.getX(), from.getY()+1)))){
+		}else if(isMovingUpLeft(to, from) && (isSpaceOpen(new Coordinate(from.getX() - 1, from.getY())) ||
+											  isSpaceOpen(new Coordinate(from.getX(), from.getY() + 1)))){
 			result = MoveResult.OK;
-		}else if(isMovingUpStraight(to, from) && (isSpaceOpen(new Coordinate(from.getX()-1, from.getY() + 1 )) ||
-												isSpaceOpen(new Coordinate(from.getX()+1, from.getY())))){
+		}else if(isMovingUpStraight(to, from) && (isSpaceOpen(new Coordinate(from.getX() - 1, from.getY() + 1 )) ||
+												isSpaceOpen(new Coordinate(from.getX() + 1, from.getY())))){
 			result = MoveResult.OK;
 		}else{
 			throw new HantoException(
-					"Cannot slide to this location, pieces are blocking move");
-		}
+					"Cannot walk to this location, pieces are blocking move");
+		}*/
+		
+		Coordinate adjacent1 = null, adjacent2 = null;
+		getAdjacentToFromSpaces(from, to, adjacent1, adjacent2);
+		if(isSpaceOpen(adjacent1) || isSpaceOpen(adjacent2))
+			result = MoveResult.OK;
+		else
+			throw new HantoException("Cannot walk to this location, pieces are blocking move");
 
 		if(!isConnected(to)){
 			//TODO Revert Piece back to where it was
-			throw new HantoException(
-					"Move causes a break in the piece chain");
+			throw new HantoException("Move causes a break in the piece chain");
 		}
 		
 		return result;
 	}
-	
-	
-	protected boolean isSpaceOpen(HantoCoordinate space){
+	/**
+	 * Gets the spaces that are adjacent to both the from and to locations. There will always be two coordinates that fit this criteria.
+	 * @param from The location the piece is moving from
+	 * @param to The location the piece is moving to
+	 * @param adj1 One coordinate that is adjacent to both
+	 * @param adj2 Another coordinate that is adjacent to both
+	 */
+	private void getAdjacentToFromSpaces(HantoCoordinate from, HantoCoordinate to, Coordinate adj1, Coordinate adj2){
+		adj1 = null;
+		adj2 = null;
+		Coordinate t = new Coordinate(to);
+		for(Coordinate c: getAdjacentSpaces(from)){
+			if(t.isAdjacent(c)){
+				if(adj1 == null)
+					adj1 = c;
+				else
+					adj2 = c;
+			}
+		}
+	}
+	private boolean isSpaceOpen(HantoCoordinate space){
 		return !pieceList.containsKey(space);
 	}
-	
 	
 	private boolean isMovingUpRight(HantoCoordinate to, HantoCoordinate from){
 		return (to.getX() - from.getX() == 1) && (to.getY() - from.getY() == 0);
 	}
-	
 	private boolean isMovingDownRight(HantoCoordinate to, HantoCoordinate from){
 		return (to.getX() - from.getX() == 1) && (to.getY() - from.getY() == 1);
 	}
-	
 	private boolean isMovingDownStraight(HantoCoordinate to, HantoCoordinate from){
 		return (to.getX() - from.getX() == 0) && (to.getY() - from.getY() == -1);
 	}
-	
 	private boolean isMovingDownLeft(HantoCoordinate to, HantoCoordinate from){
 		return (to.getX() - from.getX() == -1) && (to.getY() - from.getY() == 0);
 	}
-	
 	private boolean isMovingUpLeft(HantoCoordinate to, HantoCoordinate from){
 		return (to.getX() - from.getX() == -1) && (to.getY() - from.getY() == 1);
 	}
-	
 	private boolean isMovingUpStraight(HantoCoordinate to, HantoCoordinate from){
 		return (to.getX() - from.getX() == 0) && (to.getY() - from.getY() == 1);
 	}
-	
-	
-	
-
 }

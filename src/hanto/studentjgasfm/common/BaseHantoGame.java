@@ -167,7 +167,7 @@ public abstract class BaseHantoGame implements HantoGame {
 		}
 		return l;
 	}
-	private List<Coordinate> getAdjacentSpaces(Coordinate to){
+	protected static List<Coordinate> getAdjacentSpaces(HantoCoordinate to){
 		List<Coordinate> l = new LinkedList<Coordinate>();
 		
 		Coordinate oneUp = new Coordinate(to.getX(), to.getY() + 1);
@@ -235,7 +235,7 @@ public abstract class BaseHantoGame implements HantoGame {
 		return result;
 	}
 	
-	protected boolean hasAdjacentPiece(HantoCoordinate to) {
+	protected boolean hasAdjacentPiece(HantoCoordinate to) { // TODO Change to use getAdjacentSpaces()
 		HantoCoordinate oneUp = new Coordinate(to.getX(), to.getY() + 1);
 		HantoCoordinate oneDown = new Coordinate(to.getX(), to.getY() - 1);
 		HantoCoordinate leftUp = new Coordinate(to.getX() - 1, to.getY() + 1);
