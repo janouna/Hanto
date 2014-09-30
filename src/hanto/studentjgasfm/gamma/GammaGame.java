@@ -27,6 +27,22 @@ public class GammaGame extends BaseHantoGame {
 		player1SparrowCount = 5;
 	}
 
+	
+	/**
+	 * 
+	 * This method takes in a piece, as well as a previous location for that piece
+	 * (which is null if it's being placed for the first time), and the location that
+	 * the piece is trying to be moved.
+	 * It will then make sure that the move is valid and return the appropriate move result.
+	 * 
+	 * @param pieceType
+	 * @param from -- The location that the piece is coming from (null if piece isn't moving between 
+	 * 																two locations)
+	 * @param to  -- The location that the piece is moving to
+	 * @return -- Returns the result of the move, whether a player has won or not and if the move is valid.
+	 * 				Throws exception if the move is not valid.
+	 * @throws HantoException
+	 */
 	@Override
 	public MoveResult makeMove(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to) throws HantoException {
 		MoveResult result;
@@ -44,13 +60,27 @@ public class GammaGame extends BaseHantoGame {
 		return result;
 	}
 	
+	
+	/**
+	 * This is a helper function to makeMove that determines whether the piece can
+	 * be placed a specific location based on the color of the pieces. (Since a piece
+	 * must be adjacent to one of it's own color)
+	 * 
+	 * @param pieceType
+	 * @param from -- The location that the piece is coming from (null if piece isn't moving between 
+	 * 																two locations)
+	 * @param to  -- The location that the piece is moving to
+	 * @return -- 
+	 * @throws HantoException
+	 */
 	private MoveResult placePiece(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to) throws HantoException {
 		HantoPlayerColor color = moveCount % 2 == 1 ? player1Color : player2Color;
 		
 		if (moveCount > 2){
 			for(Coordinate c: getAdjacentPieceList(new Coordinate(to))){
-				if(pieceList.get(c).getColor() != color)
+				if(pieceList.get(c).getColor() != color){
 					throw new HantoException("Cannot place pieces next to pieces of the opposite color");
+				}
 			}
 		}
 		
@@ -58,6 +88,7 @@ public class GammaGame extends BaseHantoGame {
 		
 	}
 
+	
 	private MoveResult walk(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to) throws HantoException{
 		MoveResult result; // TODO Actually need to move piece at some point...
 		/*
@@ -86,10 +117,11 @@ public class GammaGame extends BaseHantoGame {
 		
 		Coordinate adjacent1 = null, adjacent2 = null;
 		getAdjacentToFromSpaces(from, to, adjacent1, adjacent2);
-		if(isSpaceOpen(adjacent1) || isSpaceOpen(adjacent2))
+		if(isSpaceOpen(adjacent1) || isSpaceOpen(adjacent2)){
 			result = moveValidator(pieceType, from, to);
-		else
+		}else{
 			throw new HantoException("Cannot walk to this location, pieces are blocking move");
+		}
 		
 		return result;
 	}
@@ -106,10 +138,11 @@ public class GammaGame extends BaseHantoGame {
 		Coordinate t = new Coordinate(to);
 		for(Coordinate c: getAdjacentSpaces(from)){
 			if(t.isAdjacent(c)){
-				if(adj1 == null)
+				if(adj1 == null){
 					adj1 = c;
-				else
+				}else{
 					adj2 = c;
+				}
 			}
 		}
 	}
