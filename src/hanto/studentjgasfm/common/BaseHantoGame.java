@@ -26,7 +26,7 @@ import hanto.common.MoveResult;
 
 public abstract class BaseHantoGame implements HantoGame {
 	protected Map<Coordinate, HantoPiece> pieceList;
-	protected int moveCount;
+	protected int moveCount, moveLimit, turnLimit;
 	protected boolean player1ButterflyPlaced, player2ButterflyPlaced;
 	protected HantoPlayerColor player1Color, player2Color;
 	protected Coordinate player1ButterflyLocation;
@@ -42,6 +42,8 @@ public abstract class BaseHantoGame implements HantoGame {
 		player2ButterflyPlaced = false;
 		player1SparrowCount = 0;
 		player2SparrowCount = 0;
+		turnLimit = 0;
+		moveLimit = turnLimit * 2;
 	}
 	
 	@Override
@@ -183,24 +185,7 @@ public abstract class BaseHantoGame implements HantoGame {
 		}
 	}
 	
-	private boolean hasAdjacentPiece(HantoCoordinate to) { // TODO Change to use getAdjacentSpaces()
-		/*
-		HantoCoordinate oneUp = new Coordinate(to.getX(), to.getY() + 1);
-		HantoCoordinate oneDown = new Coordinate(to.getX(), to.getY() - 1);
-		HantoCoordinate leftUp = new Coordinate(to.getX() - 1, to.getY() + 1);
-		HantoCoordinate leftDown = new Coordinate(to.getX() - 1, to.getY());
-		HantoCoordinate rightUp = new Coordinate(to.getX() + 1, to.getY());
-		HantoCoordinate rightDown = new Coordinate(to.getX() + 1, to.getY() - 1);
-
-		boolean hasPieceAdjacent = pieceList.containsKey(oneUp)
-				|| pieceList.containsKey(oneDown)
-				|| pieceList.containsKey(leftUp)
-				|| pieceList.containsKey(leftDown)
-				|| pieceList.containsKey(rightUp)
-				|| pieceList.containsKey(rightDown);
-		
-		*/
-		
+	private boolean hasAdjacentPiece(HantoCoordinate to) {
 		boolean hasPieceAdjacent = false;
 		
 		for(Coordinate c: getAdjacentSpaces(to)){
@@ -274,7 +259,7 @@ public abstract class BaseHantoGame implements HantoGame {
 			player1Wins = isPieceTrapped(player2ButterflyLocation);
 		}
 		
-		if (player1Wins && player2Wins){
+		if ((player1Wins && player2Wins) || (moveLimit > 0 && moveCount >= moveLimit)){
 			result = MoveResult.DRAW;
 		} else if (player2Wins){
 			result = getWinner(player2Color);

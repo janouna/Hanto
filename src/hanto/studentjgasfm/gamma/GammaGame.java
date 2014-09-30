@@ -25,6 +25,8 @@ public class GammaGame extends BaseHantoGame {
 		super(c);
 		player2SparrowCount = 5;
 		player1SparrowCount = 5;
+		turnLimit = 20;
+		moveLimit = turnLimit * 2;
 	}
 
 	
