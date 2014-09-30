@@ -37,11 +37,11 @@ public abstract class BaseHantoGame implements HantoGame {
 		pieceList = new HashMap<Coordinate, HantoPiece>();
 		moveCount = 1;
 		player1Color = c;
-		player2Color = (player1Color == HantoPlayerColor.BLUE) ? HantoPlayerColor.RED
-				: HantoPlayerColor.BLUE;
+		player2Color = (player1Color == HantoPlayerColor.BLUE) ? HantoPlayerColor.RED : HantoPlayerColor.BLUE;
 		player1ButterflyPlaced = false;
 		player2ButterflyPlaced = false;
-		
+		player1SparrowCount = 0;
+		player2SparrowCount = 0;
 	}
 	
 	@Override
@@ -71,42 +71,57 @@ public abstract class BaseHantoGame implements HantoGame {
 		int sparrowCount = moveCount % 2 == 1 ? player1SparrowCount : player2SparrowCount;
 		boolean butterflyPlaced = moveCount % 2 == 1 ? player1ButterflyPlaced : player2ButterflyPlaced;
 		
-		if (getPieceAt(to) == null) {
-			if (moveCount == 1 && to.getX() == 0 && to.getY() == 0) { // First Move must be at 0,0
-				playerTurn(pieceType, from, to, color);
-			} else if ((moveCount == 7 && !player1ButterflyPlaced) || (moveCount == 8 && !player2ButterflyPlaced)) { // 4th move of each player, butterfly must be or have been placed
-				if (!pieceType.equals(HantoPieceType.BUTTERFLY)) {
-					throw new HantoException(
-							"Invalid Piece, Butterfly must be placed by fourth move");
-				} else {
-					playerTurn(pieceType, from, to, color);
-				}
-			} else if (hasAdjacentPiece(to)) { // Piece must have adjacent piece.
-				if((pieceType.equals(HantoPieceType.SPARROW) && sparrowCount != 0) || (pieceType.equals(HantoPieceType.BUTTERFLY) && !butterflyPlaced)){
-					playerTurn(pieceType, from, to, color);
-				} else {
-					throw new HantoException("No more of that piece remain");
-				}
+		if(isButterflyTrapped(result) != MoveResult.OK){
+			throw new HantoException("Game is already over");
+		}
+		if (getPieceAt(to) != null) {
+			throw new HantoException("Invalid to position: occupied");
+		}
+		
+		if (moveCount == 1 && to.getX() == 0 && to.getY() == 0) { // First Move must be at 0,0
+			completeTurn(pieceType, from, to, color);
+		} else if ((moveCount == 7 && !player1ButterflyPlaced) || (moveCount == 8 && !player2ButterflyPlaced)) { // 4th move of each player, butterfly must be or have been placed
+			if (!pieceType.equals(HantoPieceType.BUTTERFLY)) {
+				throw new HantoException("Invalid Piece, Butterfly must be placed by fourth move");
 			} else {
-				throw new HantoException("Invalid Position " + to.getX() + "," + to.getY());
+				completeTurn(pieceType, from, to, color);
+			}
+		} else if (hasAdjacentPiece(to)) { // Piece must have adjacent piece.
+			if((pieceType.equals(HantoPieceType.SPARROW) && sparrowCount != 0) || (pieceType.equals(HantoPieceType.BUTTERFLY) && !butterflyPlaced)){
+				completeTurn(pieceType, from, to, color);
+			} else {
+				throw new HantoException("No more of that piece remain");
 			}
 		} else {
-			throw new HantoException("Invalid to position: occupied");
+			throw new HantoException("Invalid Position " + to.getX() + "," + to.getY());
 		}
 		
 		result = isButterflyTrapped(result);
 		
 		return result;
 	}
-	protected void playerTurn(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to, HantoPlayerColor color){
+
+	private void completeTurn(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to, HantoPlayerColor color) throws HantoException{
 		if(from != null){
 			pieceList.remove(new Coordinate(from));
 		}
 		pieceList.put(new Coordinate(to), new Piece(color, pieceType));
-		piecePlaced(pieceType, color, to);
-		moveCount++;
+		
+		if(!isConnected(to)){
+			revertMove(pieceType, from, to, color);
+			throw new HantoException("Move causes a break in the piece chain");
+		}else{				
+			piecePlaced(pieceType, color, to);
+			moveCount++;
+		}
 	}
-	protected void piecePlaced(HantoPieceType pieceType,
+	private void revertMove(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to, HantoPlayerColor color) {
+		pieceList.remove(new Coordinate(to));
+		if(from != null){
+			pieceList.put(new Coordinate(from), new Piece(color, pieceType));
+		}
+	}
+	private void piecePlaced(HantoPieceType pieceType,
 			HantoPlayerColor playerColor, HantoCoordinate to) {
 		switch (pieceType){
 			case BUTTERFLY: butterflyPlaced(playerColor, to);
@@ -117,14 +132,7 @@ public abstract class BaseHantoGame implements HantoGame {
 				break;
 		}
 	}
-	protected void sparrowPlaced(HantoPlayerColor playerColor) {
-		if (playerColor.equals(player1Color)) {
-			player1SparrowCount -= 1;
-		} else {
-			player2SparrowCount -= 1;
-		}
-	}
-	protected void butterflyPlaced(HantoPlayerColor playerColor, HantoCoordinate to) {
+	private void butterflyPlaced(HantoPlayerColor playerColor, HantoCoordinate to) {
 		if (playerColor.equals(player1Color)) {
 			player1ButterflyPlaced = true;
 			player1ButterflyLocation = new Coordinate(to);
@@ -133,8 +141,43 @@ public abstract class BaseHantoGame implements HantoGame {
 			player2ButterflyLocation = new Coordinate(to);
 		}
 	}
+	private void sparrowPlaced(HantoPlayerColor playerColor) {
+		if (playerColor.equals(player1Color)) {
+			player1SparrowCount -= 1;
+		} else {
+			player2SparrowCount -= 1;
+		}
+	}
 	
-	protected boolean isConnected(HantoCoordinate to){
+	private boolean hasAdjacentPiece(HantoCoordinate to) { // TODO Change to use getAdjacentSpaces()
+		/*
+		HantoCoordinate oneUp = new Coordinate(to.getX(), to.getY() + 1);
+		HantoCoordinate oneDown = new Coordinate(to.getX(), to.getY() - 1);
+		HantoCoordinate leftUp = new Coordinate(to.getX() - 1, to.getY() + 1);
+		HantoCoordinate leftDown = new Coordinate(to.getX() - 1, to.getY());
+		HantoCoordinate rightUp = new Coordinate(to.getX() + 1, to.getY());
+		HantoCoordinate rightDown = new Coordinate(to.getX() + 1, to.getY() - 1);
+
+		boolean hasPieceAdjacent = pieceList.containsKey(oneUp)
+				|| pieceList.containsKey(oneDown)
+				|| pieceList.containsKey(leftUp)
+				|| pieceList.containsKey(leftDown)
+				|| pieceList.containsKey(rightUp)
+				|| pieceList.containsKey(rightDown);
+		
+		*/
+		
+		boolean hasPieceAdjacent = false;
+		
+		for(Coordinate c: getAdjacentSpaces(to)){
+			if(pieceList.containsKey(c))
+				hasPieceAdjacent = true;
+		}
+
+		return hasPieceAdjacent;
+	}
+	
+	private boolean isConnected(HantoCoordinate to){
 		List<Coordinate> reachable = new LinkedList<Coordinate>();
 		List<Coordinate> toExplore = new ArrayList<Coordinate>();
 		
@@ -157,7 +200,7 @@ public abstract class BaseHantoGame implements HantoGame {
 		else
 			return false;
 	}
-	private List<Coordinate> getAdjacentPieceList(Coordinate to){
+	protected List<Coordinate> getAdjacentPieceList(Coordinate to){
 		List<Coordinate> l = new LinkedList<Coordinate>();
 		
 		for(Coordinate i: getAdjacentSpaces(to)){
@@ -187,7 +230,28 @@ public abstract class BaseHantoGame implements HantoGame {
 		return l;		
 	}
 	
-	protected boolean isPieceTrapped(HantoCoordinate to) {
+	private MoveResult isButterflyTrapped(MoveResult result){
+		boolean player1Wins = false;
+		boolean player2Wins = false;
+		
+		if (player1ButterflyLocation != null){
+			player2Wins = isPieceTrapped(player1ButterflyLocation);
+		}
+		if(player2ButterflyLocation != null){
+			player1Wins = isPieceTrapped(player2ButterflyLocation);
+		}
+		
+		if (player1Wins && player2Wins){
+			result = MoveResult.DRAW;
+		} else if (player2Wins){
+			result = getWinner(player2Color);
+		} else if (player1Wins){
+			result = getWinner(player1Color);
+		}
+		
+		return result;
+	}
+	private boolean isPieceTrapped(HantoCoordinate to) {
 		HantoCoordinate oneUp = new Coordinate(to.getX(), to.getY() + 1);
 		HantoCoordinate oneDown = new Coordinate(to.getX(), to.getY() - 1);
 		HantoCoordinate leftUp = new Coordinate(to.getX() - 1, to.getY() + 1);
@@ -204,25 +268,6 @@ public abstract class BaseHantoGame implements HantoGame {
 
 		return hasPieceAdjacent;
 	}
-	protected MoveResult isButterflyTrapped(MoveResult result){
-		boolean player1Wins = false;
-		boolean player2Wins = false;
-		
-		if (player1ButterflyLocation != null){
-			player2Wins = isPieceTrapped(player1ButterflyLocation);
-		}
-		if(player2ButterflyLocation != null){
-			player1Wins = isPieceTrapped(player2ButterflyLocation);
-		}
-		
-		if (player2Wins){
-			result = getWinner(player2Color);
-		} else if(player1Wins){
-			result = getWinner(player1Color);
-		}
-		
-		return result;
-	}
 	private MoveResult getWinner(HantoPlayerColor playerColor){
 		MoveResult result = null;
 		switch (playerColor){
@@ -233,23 +278,5 @@ public abstract class BaseHantoGame implements HantoGame {
 		}
 		
 		return result;
-	}
-	
-	protected boolean hasAdjacentPiece(HantoCoordinate to) { // TODO Change to use getAdjacentSpaces()
-		HantoCoordinate oneUp = new Coordinate(to.getX(), to.getY() + 1);
-		HantoCoordinate oneDown = new Coordinate(to.getX(), to.getY() - 1);
-		HantoCoordinate leftUp = new Coordinate(to.getX() - 1, to.getY() + 1);
-		HantoCoordinate leftDown = new Coordinate(to.getX() - 1, to.getY());
-		HantoCoordinate rightUp = new Coordinate(to.getX() + 1, to.getY());
-		HantoCoordinate rightDown = new Coordinate(to.getX() + 1, to.getY() - 1);
-
-		boolean hasPieceAdjacent = pieceList.containsKey(oneUp)
-				|| pieceList.containsKey(oneDown)
-				|| pieceList.containsKey(leftUp)
-				|| pieceList.containsKey(leftDown)
-				|| pieceList.containsKey(rightUp)
-				|| pieceList.containsKey(rightDown);
-
-		return hasPieceAdjacent;
 	}
 }
