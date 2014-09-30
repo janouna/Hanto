@@ -18,7 +18,8 @@ import hanto.common.MoveResult;
 import hanto.studentjgasfm.common.BaseHantoGame;
 
 /**
- * Second Hanto Variation
+ * This is the second iteration of the Hanto Game, following the 
+ * Beta guidelines set in the developers guide
  */
 public class BetaGame extends BaseHantoGame implements HantoGame {
 

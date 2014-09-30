@@ -11,6 +11,7 @@
 package hanto.studentjgasfm.common;
 
 import hanto.common.*;
+
 import hanto.studentjgasfm.gamma.GammaTestGame;
 
 /**

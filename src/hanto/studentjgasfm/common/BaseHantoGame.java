@@ -54,6 +54,10 @@ public abstract class BaseHantoGame implements HantoGame {
 		return pieceList.get(new Coordinate(where));
 	}
 
+	
+	/**
+	 * Returns a string that contains the values of each piece on the board and their locations
+	 */
 	@Override
 	public String getPrintableBoard() {
 		String board = "";
@@ -66,6 +70,19 @@ public abstract class BaseHantoGame implements HantoGame {
 		return board;
 	}
 	
+	
+	/**
+	 * This method holds all of the most basic things that must be true in order
+	 * for a move to be valid. This includes whether the space is already occupied,
+	 * if the butterfly has been placed by the 4th move, and making sure that the player 
+	 * has the piece that he/she is trying to place.
+	 * 
+	 * @param pieceType
+	 * @param from
+	 * @param to
+	 * @return
+	 * @throws HantoException
+	 */
 	protected MoveResult moveValidator(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to) throws HantoException {
 		MoveResult result = MoveResult.OK;
 		
@@ -117,12 +134,29 @@ public abstract class BaseHantoGame implements HantoGame {
 			moveCount++;
 		}
 	}
+	
+	/**
+	 * This reverts a piece back to its original (valid) location 
+	 * in the event that it is moved and is not connected. 
+	 * @param pieceType
+	 * @param from
+	 * @param to
+	 * @param color
+	 */
 	private void revertMove(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to, HantoPlayerColor color) {
 		pieceList.remove(new Coordinate(to));
 		if(from != null){
 			pieceList.put(new Coordinate(from), new Piece(color, pieceType));
 		}
 	}
+	
+	/**
+	 * This makes sure that when a piece is moved it is properly
+	 * recorded to ensure that pieces are kept track of.
+	 * @param pieceType
+	 * @param playerColor
+	 * @param to
+	 */
 	private void piecePlaced(HantoPieceType pieceType,
 			HantoPlayerColor playerColor, HantoCoordinate to) {
 		switch (pieceType){
@@ -155,8 +189,9 @@ public abstract class BaseHantoGame implements HantoGame {
 		boolean hasPieceAdjacent = false;
 		
 		for(Coordinate c: getAdjacentSpaces(to)){
-			if(pieceList.containsKey(c))
+			if(pieceList.containsKey(c)){
 				hasPieceAdjacent = true;
+			}
 		}
 
 		return hasPieceAdjacent;
@@ -180,10 +215,8 @@ public abstract class BaseHantoGame implements HantoGame {
 			}
 		}
 		
-		if(reachable.size() == pieceList.keySet().size())
-			return true;
-		else
-			return false;
+		return reachable.size() == pieceList.keySet().size();
+		
 	}
 	protected List<Coordinate> getAdjacentPieceList(Coordinate to){
 		List<Coordinate> l = new LinkedList<Coordinate>();

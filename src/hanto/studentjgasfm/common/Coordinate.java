@@ -10,7 +10,6 @@
 package hanto.studentjgasfm.common;
 
 import hanto.common.HantoCoordinate;
-import hanto.studentjgasfm.common.BaseHantoGame;
 
 /**
  * Implements HantoCoordinate and changes Hashcode and Equals methods
