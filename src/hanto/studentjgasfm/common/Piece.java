@@ -37,7 +37,6 @@ public class Piece implements HantoPiece {
 
 	@Override
 	public HantoPieceType getType() {
-		// TODO Auto-generated method stub
 		return type;
 	}
 
