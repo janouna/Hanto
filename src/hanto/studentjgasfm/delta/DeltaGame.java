@@ -2,6 +2,7 @@ package hanto.studentjgasfm.delta;
 
 import hanto.common.HantoCoordinate;
 import hanto.common.HantoException;
+import hanto.common.HantoPiece;
 import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
 import hanto.common.MoveResult;
@@ -23,7 +24,8 @@ public class DeltaGame extends BaseHantoGame {
 		MoveResult result;
 		
 		if(from != null){
-			if(pieceList.get(new Coordinate(from)).getType() != pieceType){
+			HantoPiece p = pieceList.get(new Coordinate(from));
+			if(p == null || p.getType() != pieceType){
 				throw new HantoException("Piece type does not match the piece at the from location");
 			}else if (pieceType == HantoPieceType.BUTTERFLY || pieceType == HantoPieceType.CRAB){
 				result = walk(pieceType, from, to);
