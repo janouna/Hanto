@@ -25,6 +25,7 @@ public class GammaTestGame extends GammaGame implements HantoTestGame {
 	public void initializeBoard(PieceLocationPair[] initialPieces) {
 		for (PieceLocationPair p: initialPieces){
 			pieceList.put(new Coordinate(p.location), new Piece(p.player, p.pieceType));
+			piecePlaced(p.pieceType, p.player, p.location);
 		}
 	}
 
