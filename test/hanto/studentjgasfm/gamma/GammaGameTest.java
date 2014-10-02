@@ -93,4 +93,8 @@ public class GammaGameTest {
 		}
 		gammaTest.initializeBoard(initialPieces);
 	}*/
+	
+	// TODO Place piece next to invalid color
+	// TODO Test walk surrounded by 5
+	// TODO Test try to walk to occupied space with open adjacents, keep contiguous
 }

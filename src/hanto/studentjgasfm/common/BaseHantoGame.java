@@ -228,13 +228,18 @@ public abstract class BaseHantoGame implements HantoGame {
 	 * @param playerColor
 	 * @param to
 	 */
-	private void piecePlaced(HantoPieceType pieceType,
+	protected void piecePlaced(HantoPieceType pieceType,
 			HantoPlayerColor playerColor, HantoCoordinate to) {
 		switch (pieceType){
-		case BUTTERFLY: butterflyPlaced(playerColor, to);
-		break;
-		case SPARROW: sparrowPlaced(playerColor);
-		break;
+		case BUTTERFLY: 
+			butterflyPlaced(playerColor, to);
+			break;
+		case SPARROW: 
+			sparrowPlaced(playerColor);
+			break;
+		case CRAB:
+			crabPlaced(playerColor);
+			break;
 		default:
 			break;
 		}
@@ -253,6 +258,13 @@ public abstract class BaseHantoGame implements HantoGame {
 			player1SparrowCount -= 1;
 		} else {
 			player2SparrowCount -= 1;
+		}
+	}
+	private void crabPlaced(HantoPlayerColor playerColor) {
+		if (playerColor.equals(player1Color)) {
+			player1CrabCount -= 1;
+		} else {
+			player2CrabCount -= 1;
 		}
 	}
 
@@ -357,13 +369,15 @@ public abstract class BaseHantoGame implements HantoGame {
 
 		return hasPieceAdjacent;
 	}
-	private MoveResult getWinner(HantoPlayerColor playerColor){
+	protected MoveResult getWinner(HantoPlayerColor playerColor){
 		MoveResult result = null;
 		switch (playerColor){
-		case RED: result = MoveResult.RED_WINS; 
-		break;
-		case BLUE: result = MoveResult.BLUE_WINS; 
-		break;
+		case RED: 
+			result = MoveResult.RED_WINS; 
+			break;
+		case BLUE: 
+			result = MoveResult.BLUE_WINS; 
+			break;
 		}
 
 		return result;
