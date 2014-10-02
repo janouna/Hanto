@@ -11,31 +11,31 @@
 package hanto.studentjgasfm.gamma;
 
 import hanto.common.HantoPlayerColor;
+import hanto.studentjgasfm.common.Coordinate;
 import hanto.studentjgasfm.common.HantoTestGame;
+import hanto.studentjgasfm.common.Piece;
 
 public class GammaTestGame extends GammaGame implements HantoTestGame {
 
 	public GammaTestGame(HantoPlayerColor c) {
 		super(c);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void initializeBoard(PieceLocationPair[] initialPieces) {
-		// TODO Auto-generated method stub
-
+		for (PieceLocationPair p: initialPieces){
+			pieceList.put(new Coordinate(p.location), new Piece(p.player, p.pieceType));
+		}
 	}
 
 	@Override
 	public void setTurnNumber(int turnNumber) {
-		// TODO Auto-generated method stub
-
+		moveCount = (turnNumber * 2) - 1;
 	}
 
 	@Override
 	public void setPlayerMoving(HantoPlayerColor player) {
-		// TODO Auto-generated method stub
-
+		if(player == player2Color)
+			moveCount++;
 	}
-
 }

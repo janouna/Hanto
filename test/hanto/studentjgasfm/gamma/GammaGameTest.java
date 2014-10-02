@@ -13,16 +13,16 @@ package hanto.studentjgasfm.gamma;
 import static org.junit.Assert.*;
 import hanto.common.HantoCoordinate;
 import hanto.common.HantoException;
-
+import hanto.common.HantoGame;
 import hanto.common.HantoGameID;
 import hanto.common.HantoPiece;
 import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
 import hanto.common.MoveResult;
 import hanto.studentjgasfm.common.Coordinate;
-
 import hanto.studentjgasfm.common.HantoTestGame;
 import hanto.studentjgasfm.common.HantoTestGameFactory;
+import hanto.studentjgasfm.common.HantoTestGame.PieceLocationPair;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,8 +32,10 @@ import org.junit.Test;
 
 public class GammaGameTest {
 
-	HantoTestGame gamma;
-	HantoTestGame gammaRedFirst;
+	HantoTestGame gammaTest;
+	HantoTestGame gammaTestRedFirst;
+	HantoGame gamma;
+	HantoGame gammaRedFirst;
 	Map<HantoCoordinate, HantoPiece> pieceList;
 
 	/**
@@ -42,9 +44,11 @@ public class GammaGameTest {
 	@Before
 	public void setUp() {
 		HantoTestGameFactory factory = HantoTestGameFactory.getInstance();
-		gamma = factory.makeHantoTestGame(HantoGameID.GAMMA_HANTO);
+		gammaTest = factory.makeHantoTestGame(HantoGameID.GAMMA_HANTO);
 		pieceList = new HashMap<HantoCoordinate, HantoPiece>();
-		gammaRedFirst = factory.makeHantoTestGame(HantoGameID.GAMMA_HANTO, HantoPlayerColor.RED);
+		gammaTestRedFirst = factory.makeHantoTestGame(HantoGameID.GAMMA_HANTO, HantoPlayerColor.RED);
+		gamma = gammaTest;
+		gammaRedFirst = gammaTestRedFirst;
 	}
 	
 	
@@ -64,7 +68,7 @@ public class GammaGameTest {
 	 * Method 
 	 * @throws HantoException
 	 */
-	public void testValidMovePiece() throws HantoException{
+	public void testWalk() throws HantoException{
 		assertTrue(gamma.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0)) == MoveResult.OK);
 		assertTrue(gamma.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 1)) == MoveResult.OK);
 		assertTrue(gamma.makeMove(HantoPieceType.BUTTERFLY, new Coordinate(0, 0), new Coordinate(1, 0)) == MoveResult.OK);
@@ -76,10 +80,17 @@ public class GammaGameTest {
 	 * Method testMoveOntoAnotherPiece.
 	 * @throws HantoException */
 	@Test (expected = HantoException.class)
-	public void testInvalidMovePiece() throws HantoException{
+	public void testWalkBrokenChain() throws HantoException{
 		assertTrue(gamma.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 0)) == MoveResult.OK);
 		assertTrue(gamma.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 1)) == MoveResult.OK);
 		gamma.makeMove(HantoPieceType.BUTTERFLY, new Coordinate(0, 0), new Coordinate(-1, 0));
 	}
-
+	/*
+	@Test
+	public void testWalkSurroundedValid1() throws HantoException{
+		PieceLocationPair[] initialPieces = {
+			new PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.BUTTERFLY, Hanto)
+		}
+		gammaTest.initializeBoard(initialPieces);
+	}*/
 }
