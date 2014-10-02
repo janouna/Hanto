@@ -32,6 +32,9 @@ public abstract class BaseHantoGame implements HantoGame {
 	protected Coordinate player1ButterflyLocation;
 	protected Coordinate player2ButterflyLocation;
 	protected int player1SparrowCount, player2SparrowCount;
+	protected int player2CrabCount;
+	protected int player1CrabCount;
+	protected boolean resigned;
 	
 	protected BaseHantoGame(HantoPlayerColor c){
 		pieceList = new HashMap<Coordinate, HantoPiece>();
@@ -42,8 +45,11 @@ public abstract class BaseHantoGame implements HantoGame {
 		player2ButterflyPlaced = false;
 		player1SparrowCount = 0;
 		player2SparrowCount = 0;
+		player2CrabCount = 0;
+		player1CrabCount = 0;
 		turnLimit = 0;
 		moveLimit = turnLimit * 2;
+		resigned = false;
 	}
 	
 	@Override
@@ -70,6 +76,69 @@ public abstract class BaseHantoGame implements HantoGame {
 		return board;
 	}
 	
+	/**
+	 * This is a helper function to makeMove that determines whether the piece can
+	 * be placed a specific location based on the color of the pieces. (Since a piece
+	 * must be adjacent to one of it's own color)
+	 * 
+	 * @param pieceType
+	 * @param from -- The location that the piece is coming from (null if piece isn't moving between 
+	 * 																two locations)
+	 * @param to  -- The location that the piece is moving to
+	 * @return -- 
+	 * @throws HantoException
+	 */
+	protected MoveResult placePiece(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to) throws HantoException {
+		HantoPlayerColor color = moveCount % 2 == 1 ? player1Color : player2Color;
+		
+		if (moveCount > 2){
+			for(Coordinate c: getAdjacentPieceList(new Coordinate(to))){
+				if(pieceList.get(c).getColor() != color){
+					throw new HantoException("Cannot place pieces next to pieces of the opposite color");
+				}
+			}
+		}
+		
+		return moveValidator(pieceType, from, to);
+	}
+	
+	protected MoveResult walk(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to) throws HantoException{
+		MoveResult result;
+		
+		Coordinate adjacent1 = null, adjacent2 = null;
+		getAdjacentToFromSpaces(from, to, adjacent1, adjacent2);
+		if(isSpaceOpen(adjacent1) || isSpaceOpen(adjacent2)){
+			result = moveValidator(pieceType, from, to);
+		}else{
+			throw new HantoException("Cannot walk to this location, pieces are blocking move");
+		}
+		
+		return result;
+	}
+	/**
+	 * Gets the spaces that are adjacent to both the from and to locations. There will always be two coordinates that fit this criteria.
+	 * @param from The location the piece is moving from
+	 * @param to The location the piece is moving to
+	 * @param adj1 One coordinate that is adjacent to both
+	 * @param adj2 Another coordinate that is adjacent to both
+	 */
+	private void getAdjacentToFromSpaces(HantoCoordinate from, HantoCoordinate to, Coordinate adj1, Coordinate adj2){
+		adj1 = null;
+		adj2 = null;
+		Coordinate t = new Coordinate(to);
+		for(Coordinate c: getAdjacentSpaces(from)){
+			if(t.isAdjacent(c)){
+				if(adj1 == null){
+					adj1 = c;
+				}else{
+					adj2 = c;
+				}
+			}
+		}
+	}
+	private boolean isSpaceOpen(HantoCoordinate space){
+		return !pieceList.containsKey(space);
+	}
 	
 	/**
 	 * This method holds all of the most basic things that must be true in order
@@ -88,9 +157,10 @@ public abstract class BaseHantoGame implements HantoGame {
 		
 		HantoPlayerColor color = moveCount % 2 == 1 ? player1Color : player2Color;
 		int sparrowCount = moveCount % 2 == 1 ? player1SparrowCount : player2SparrowCount;
+		int crabCount = moveCount % 2 == 1 ? player1CrabCount : player2CrabCount;
 		boolean butterflyPlaced = moveCount % 2 == 1 ? player1ButterflyPlaced : player2ButterflyPlaced;
 		
-		if(isButterflyTrapped(result) != MoveResult.OK){
+		if(isButterflyTrapped(result) != MoveResult.OK || resigned){
 			throw new HantoException("Game is already over");
 		}
 		if (getPieceAt(to) != null) {
@@ -106,7 +176,9 @@ public abstract class BaseHantoGame implements HantoGame {
 				completeTurn(pieceType, from, to, color);
 			}
 		} else if (hasAdjacentPiece(to)) { // Piece must have adjacent piece.
-			if((pieceType.equals(HantoPieceType.SPARROW) && sparrowCount != 0) || (pieceType.equals(HantoPieceType.BUTTERFLY) && !butterflyPlaced)){
+			if((pieceType.equals(HantoPieceType.SPARROW) && sparrowCount != 0) || 
+					(pieceType.equals(HantoPieceType.CRAB) && crabCount != 0) ||
+					(pieceType.equals(HantoPieceType.BUTTERFLY) && !butterflyPlaced)){
 				completeTurn(pieceType, from, to, color);
 			} else {
 				throw new HantoException("No more of that piece remain");
