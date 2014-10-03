@@ -50,12 +50,7 @@ public class GammaGame extends BaseHantoGame {
 		MoveResult result;
 		
 		if(from != null){
-			HantoPiece p = pieceList.get(new Coordinate(from));
-			if(p == null || p.getType() != pieceType){
-				throw new HantoException("Piece type does not match the piece at the from location");
-			}else{
-				result = walk(pieceType, from, to);
-			}
+			result = walk(pieceType, from, to);
 		}else{
 			result = placePiece(pieceType, from, to);
 		}

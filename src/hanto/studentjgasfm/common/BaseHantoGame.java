@@ -104,10 +104,9 @@ public abstract class BaseHantoGame implements HantoGame {
 
 	protected MoveResult walk(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to) throws HantoException{
 		MoveResult result;
-
-		Coordinate adjacent1 = null, adjacent2 = null;
-		getAdjacentToFromSpaces(from, to, adjacent1, adjacent2);
-		if(isSpaceOpen(adjacent1) || isSpaceOpen(adjacent2)){
+		AdjacentCoordinatePair p = getAdjacentToFromSpaces(from, to);
+		
+		if(isSpaceOpen(p.c1) || isSpaceOpen(p.c2)){
 			result = moveValidator(pieceType, from, to);
 		}else{
 			throw new HantoException("Cannot walk to this location, pieces are blocking move");
@@ -122,9 +121,9 @@ public abstract class BaseHantoGame implements HantoGame {
 	 * @param adj1 One coordinate that is adjacent to both
 	 * @param adj2 Another coordinate that is adjacent to both
 	 */
-	private void getAdjacentToFromSpaces(HantoCoordinate from, HantoCoordinate to, Coordinate adj1, Coordinate adj2){
-		adj1 = null;
-		adj2 = null;
+	private AdjacentCoordinatePair getAdjacentToFromSpaces(HantoCoordinate from, HantoCoordinate to){
+		Coordinate adj1 = null;
+		Coordinate adj2 = null;
 		Coordinate t = new Coordinate(to);
 		for(Coordinate c: getAdjacentSpaces(from)){
 			if(t.isAdjacent(c)){
@@ -135,8 +134,10 @@ public abstract class BaseHantoGame implements HantoGame {
 				}
 			}
 		}
+		
+		return new AdjacentCoordinatePair(adj1, adj2);
 	}
-	private boolean isSpaceOpen(HantoCoordinate space){
+	private boolean isSpaceOpen(Coordinate space){
 		return !pieceList.containsKey(space);
 	}
 
@@ -189,12 +190,18 @@ public abstract class BaseHantoGame implements HantoGame {
 		boolean butterflyPlaced = moveCount % 2 == 1 ? player1ButterflyPlaced : player2ButterflyPlaced;
 		
 		if(from != null){
-			pieceList.remove(new Coordinate(from));
+			HantoPiece p = pieceList.get(new Coordinate(from));
+			if(p == null || p.getType() != pieceType){
+				throw new HantoException("Piece type does not match the piece at the from location");
+			}else{
+				pieceList.remove(new Coordinate(from));
+			}
 		}else if((pieceType.equals(HantoPieceType.SPARROW) && sparrowCount == 0) || 
 				(pieceType.equals(HantoPieceType.CRAB) && crabCount == 0) ||
 				(pieceType.equals(HantoPieceType.BUTTERFLY) && butterflyPlaced)){
 			throw new HantoException("No more of that piece remain");
 		}
+		
 		pieceList.put(new Coordinate(to), new Piece(color, pieceType));
 
 		if(!isConnected(to)){
@@ -381,5 +388,14 @@ public abstract class BaseHantoGame implements HantoGame {
 		}
 
 		return result;
+	}
+	
+	private class AdjacentCoordinatePair{
+		public final Coordinate c1, c2;
+		
+		public AdjacentCoordinatePair(Coordinate c1, Coordinate c2){
+			this.c1 = c1;
+			this.c2 = c2;
+		}
 	}
 }

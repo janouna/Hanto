@@ -85,16 +85,71 @@ public class GammaGameTest {
 		assertTrue(gamma.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0, 1)) == MoveResult.OK);
 		gamma.makeMove(HantoPieceType.BUTTERFLY, new Coordinate(0, 0), new Coordinate(-1, 0));
 	}
-	/*
+	
 	@Test
 	public void testWalkSurroundedValid1() throws HantoException{
 		PieceLocationPair[] initialPieces = {
-			new PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.BUTTERFLY, Hanto)
-		}
+			new PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.BUTTERFLY, new Coordinate(1,0)),
+			new PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.SPARROW, new Coordinate(1,-1)),
+			new PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.SPARROW, new Coordinate(0,-1)),
+			new PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.SPARROW, new Coordinate(-1,0)),
+			new PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.SPARROW, new Coordinate(0,0))
+		};
 		gammaTest.initializeBoard(initialPieces);
-	}*/
+		gammaTest.setTurnNumber(4);
+		assertEquals(MoveResult.OK, gamma.makeMove(HantoPieceType.SPARROW, new Coordinate(0,0), new Coordinate(-1,1)));
+	}
 	
-	// TODO Place piece next to invalid color
-	// TODO Test walk surrounded by 5
-	// TODO Test try to walk to occupied space with open adjacents, keep contiguous
+	@Test
+	public void testWalkSurroundedValid2() throws HantoException{
+		PieceLocationPair[] initialPieces = {
+			new PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.BUTTERFLY, new Coordinate(1,0)),
+			new PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.SPARROW, new Coordinate(1,-1)),
+			new PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.SPARROW, new Coordinate(0,-1)),
+			new PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.SPARROW, new Coordinate(-1,0)),
+			new PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.SPARROW, new Coordinate(0,0))
+		};
+		gammaTest.initializeBoard(initialPieces);
+		gammaTest.setTurnNumber(4);
+		assertEquals(MoveResult.OK, gamma.makeMove(HantoPieceType.SPARROW, new Coordinate(0,0), new Coordinate(0,1)));
+	}
+	
+	@Test (expected = HantoException.class)
+	public void testWalkSurroundedInValid1() throws HantoException{
+		PieceLocationPair[] initialPieces = {
+			new PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.BUTTERFLY, new Coordinate(1,0)),
+			new PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.SPARROW, new Coordinate(1,-1)),
+			new PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.SPARROW, new Coordinate(0,-1)),
+			new PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.SPARROW, new Coordinate(-1,0)),
+			new PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.SPARROW, new Coordinate(-1,1)),
+			new PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.SPARROW, new Coordinate(0,0))
+		};
+		gammaTest.initializeBoard(initialPieces);
+		gammaTest.setTurnNumber(4);
+		gamma.makeMove(HantoPieceType.SPARROW, new Coordinate(0,0), new Coordinate(0,1));
+	}
+	
+	@Test (expected = HantoException.class)
+	public void testWalkSurroundedInValid2() throws HantoException{
+		PieceLocationPair[] initialPieces = {
+			new PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.BUTTERFLY, new Coordinate(1,0)),
+			new PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.SPARROW, new Coordinate(1,-1)),
+			new PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.SPARROW, new Coordinate(0,-1)),
+			new PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.SPARROW, new Coordinate(-1,1)),
+			new PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.SPARROW, new Coordinate(0,0))
+		};
+		gammaTest.initializeBoard(initialPieces);
+		gammaTest.setTurnNumber(4);
+		gamma.makeMove(HantoPieceType.SPARROW, new Coordinate(0,0), new Coordinate(-1,1));
+	}
+	
+	@Test (expected = HantoException.class)
+	public void testPlaceInvalidPiece() throws HantoException{
+		PieceLocationPair[] initialPieces = {
+				new PieceLocationPair(HantoPlayerColor.RED, HantoPieceType.BUTTERFLY, new Coordinate(0,0)),
+		};
+		gammaTest.initializeBoard(initialPieces);
+		gammaTest.setTurnNumber(2);
+		gamma.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0,1));
+	}
 }

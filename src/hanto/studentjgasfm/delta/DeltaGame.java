@@ -44,6 +44,7 @@ public class DeltaGame extends BaseHantoGame {
 
 	private MoveResult resign() {
 		HantoPlayerColor color = moveCount % 2 == 0 ? player1Color : player2Color;
+		resigned = true;
 		return getWinner(color);
 	}
 
