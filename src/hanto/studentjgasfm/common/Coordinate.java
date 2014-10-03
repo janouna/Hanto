@@ -62,9 +62,7 @@ public class Coordinate implements HantoCoordinate {
 	public boolean equals(Object obj) {
 		boolean equals = false;
 
-		if (this == obj) {
-			equals = true;
-		} else if (obj != null && getClass() == obj.getClass()) {
+		if (obj != null && getClass() == obj.getClass()) {
 			Coordinate other = (Coordinate) obj;
 			if (x == other.x && y == other.y) {
 				equals = true;
@@ -72,7 +70,12 @@ public class Coordinate implements HantoCoordinate {
 		}
 		return equals;
 	}
-
+	
+	/**
+	 * Determines if a given coordinate is adjacent to this coordinate
+	 * @param c The coordinate to check
+	 * @return Returns true of the coordinates are adjacent
+	 */
 	public boolean isAdjacent(HantoCoordinate c){
 		return BaseHantoGame.getAdjacentSpaces(this).contains(new Coordinate(c));
 	}

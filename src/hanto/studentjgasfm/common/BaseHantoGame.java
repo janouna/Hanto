@@ -24,6 +24,9 @@ import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
 import hanto.common.MoveResult;
 
+/**
+ * The Base Hanto class.  All game classes except Alpha extend this class.
+ */
 public abstract class BaseHantoGame implements HantoGame {
 	protected Map<Coordinate, HantoPiece> pieceList;
 	protected int moveCount, moveLimit, turnLimit;
@@ -36,6 +39,10 @@ public abstract class BaseHantoGame implements HantoGame {
 	protected int player1CrabCount;
 	protected boolean resigned;
 
+	/**
+	 * Constructor for BaseHantoGame.
+	 * @param c HantoPlayerColor
+	 */
 	protected BaseHantoGame(HantoPlayerColor c){
 		pieceList = new HashMap<Coordinate, HantoPiece>();
 		moveCount = 1;
@@ -80,12 +87,10 @@ public abstract class BaseHantoGame implements HantoGame {
 	 * This is a helper function to makeMove that determines whether the piece can
 	 * be placed a specific location based on the color of the pieces. (Since a piece
 	 * must be adjacent to one of it's own color)
-	 * 
-	 * @param pieceType
-	 * @param from -- The location that the piece is coming from (null if piece isn't moving between 
-	 * 																two locations)
-	 * @param to  -- The location that the piece is moving to
-	 * @return -- 
+	 * @param pieceType The type of the piece
+	 * @param from The location that the piece is coming from (null for this method generally)
+	 * @param to The location that the piece is being placed
+	 * @return The result of the piece placement
 	 * @throws HantoException
 	 */
 	protected MoveResult placePiece(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to) throws HantoException {
@@ -102,14 +107,23 @@ public abstract class BaseHantoGame implements HantoGame {
 		return moveValidator(pieceType, from, to);
 	}
 
+	/**
+	 * Called when a piece is walking
+	 * @param pieceType The type of the piece
+	 * @param from The location that the piece is coming from (null if piece isn't moving between two locations)
+	 * @param to The location that the piece is moving to
+	 * @return The result of the walking
+	 * @throws HantoException
+	 */
 	protected MoveResult walk(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to) throws HantoException{
 		MoveResult result;
 		AdjacentCoordinatePair p = getAdjacentToFromSpaces(from, to);
+		Coordinate f = new Coordinate(from);
 		
-		if(isSpaceOpen(p.c1) || isSpaceOpen(p.c2)){
+		if((isSpaceOpen(p.c1) || isSpaceOpen(p.c2)) && f.isAdjacent(to)){
 			result = moveValidator(pieceType, from, to);
 		}else{
-			throw new HantoException("Cannot walk to this location, pieces are blocking move");
+			throw new HantoException("Cannot walk to this location");
 		}
 
 		return result;
@@ -118,8 +132,7 @@ public abstract class BaseHantoGame implements HantoGame {
 	 * Gets the spaces that are adjacent to both the from and to locations. There will always be two coordinates that fit this criteria.
 	 * @param from The location the piece is moving from
 	 * @param to The location the piece is moving to
-	 * @param adj1 One coordinate that is adjacent to both
-	 * @param adj2 Another coordinate that is adjacent to both
+	 * @return The AdjacentCoordinatePair containing the two coordinates adjacent to both to and from
 	 */
 	private AdjacentCoordinatePair getAdjacentToFromSpaces(HantoCoordinate from, HantoCoordinate to){
 		Coordinate adj1 = null;
@@ -146,11 +159,10 @@ public abstract class BaseHantoGame implements HantoGame {
 	 * for a move to be valid. This includes whether the space is already occupied,
 	 * if the butterfly has been placed by the 4th move, and making sure that the player 
 	 * has the piece that he/she is trying to place.
-	 * 
-	 * @param pieceType
-	 * @param from
-	 * @param to
-	 * @return
+	 * @param pieceType The type of the piece
+	 * @param from The location that the piece is coming from (null if piece isn't moving between two locations)
+	 * @param to The location that the piece is moving to
+	 * @return The result of the movement
 	 * @throws HantoException
 	 */
 	protected MoveResult moveValidator(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to) throws HantoException {
@@ -167,7 +179,8 @@ public abstract class BaseHantoGame implements HantoGame {
 
 		if (moveCount == 1 && to.getX() == 0 && to.getY() == 0) { // First Move must be at 0,0
 			completeTurn(pieceType, from, to, color);
-		} else if ((moveCount == 7 && !player1ButterflyPlaced) || (moveCount == 8 && !player2ButterflyPlaced)) { // 4th move of each player, butterfly must be or have been placed
+		} else if ((moveCount == 7 && !player1ButterflyPlaced) || (moveCount == 8 && !player2ButterflyPlaced)) {
+			// 4th move of each player, butterfly must be or have been placed
 			if (!pieceType.equals(HantoPieceType.BUTTERFLY)) {
 				throw new HantoException("Invalid Piece, Butterfly must be placed by fourth move");
 			} else {
@@ -183,7 +196,15 @@ public abstract class BaseHantoGame implements HantoGame {
 
 		return result;
 	}
-
+	
+	/**
+	 * Called by moveValidator for the final checks before completing the move
+	 * @param pieceType The type of the piece
+	 * @param from The location that the piece is coming from (null if piece isn't moving between two locations)
+	 * @param to The location that the piece is moving to
+	 * @param color The color of the current player
+	 * @throws HantoException
+	 */
 	private void completeTurn(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to, HantoPlayerColor color) throws HantoException{
 		int sparrowCount = moveCount % 2 == 1 ? player1SparrowCount : player2SparrowCount;
 		int crabCount = moveCount % 2 == 1 ? player1CrabCount : player2CrabCount;
@@ -216,10 +237,10 @@ public abstract class BaseHantoGame implements HantoGame {
 	/**
 	 * This reverts a piece back to its original (valid) location 
 	 * in the event that it is moved and is not connected. 
-	 * @param pieceType
-	 * @param from
-	 * @param to
-	 * @param color
+	 * @param pieceType The type of the piece
+	 * @param from The location that the piece is coming from (null if piece isn't moving between two locations)
+	 * @param to The location that the piece is moving to
+	 * @param color The color of the current player
 	 */
 	private void revertMove(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to, HantoPlayerColor color) {
 		pieceList.remove(new Coordinate(to));
@@ -231,9 +252,9 @@ public abstract class BaseHantoGame implements HantoGame {
 	/**
 	 * This makes sure that when a piece is moved it is properly
 	 * recorded to ensure that pieces are kept track of.
-	 * @param pieceType
-	 * @param playerColor
-	 * @param to
+	 * @param pieceType The type of the piece
+	 * @param playerColor The color of the current player
+	 * @param to The location that the piece is moving to
 	 */
 	protected void piecePlaced(HantoPieceType pieceType,
 			HantoPlayerColor playerColor, HantoCoordinate to) {
@@ -286,7 +307,13 @@ public abstract class BaseHantoGame implements HantoGame {
 
 		return hasPieceAdjacent;
 	}
-
+	
+	/**
+	 * Does a graph search of all of the pieces on the board to make sure 
+	 * that all pieces are still connected after a move has been completed.
+	 * @param to The place the piece is moving to.  Used as the starting position of the graph search.
+	 * @return Whether or not the graph of pieces is one connected blob.
+	 */
 	private boolean isConnected(HantoCoordinate to){
 		List<Coordinate> reachable = new LinkedList<Coordinate>();
 		List<Coordinate> toExplore = new ArrayList<Coordinate>();
@@ -308,6 +335,11 @@ public abstract class BaseHantoGame implements HantoGame {
 		return reachable.size() == pieceList.keySet().size();
 
 	}
+	/**
+	 * Gets the list of coordinates that are adjacent and contain pieces
+	 * @param to The current coordinate
+	 * @return The list of coordinates adjacent that contain pieces
+	 */
 	protected List<Coordinate> getAdjacentPieceList(Coordinate to){
 		List<Coordinate> l = new LinkedList<Coordinate>();
 
@@ -318,6 +350,11 @@ public abstract class BaseHantoGame implements HantoGame {
 		}
 		return l;
 	}
+	/**
+	 * Gets the list of coordinates that are adjacent to the given coordinate
+	 * @param to The current coordinate
+	 * @return The list of coordinates adjacent
+	 */
 	protected static List<Coordinate> getAdjacentSpaces(HantoCoordinate to){
 		List<Coordinate> l = new LinkedList<Coordinate>();
 
@@ -376,6 +413,11 @@ public abstract class BaseHantoGame implements HantoGame {
 
 		return hasPieceAdjacent;
 	}
+	/**
+	 * Returns the winner
+	 * @param playerColor The color of the winner
+	 * @return The MoveResult corresponding to the winner
+	 */
 	protected MoveResult getWinner(HantoPlayerColor playerColor){
 		MoveResult result = null;
 		switch (playerColor){
@@ -390,10 +432,18 @@ public abstract class BaseHantoGame implements HantoGame {
 		return result;
 	}
 	
+	/**
+	 * Contains a pair of coordinates adjacent to a to and from pair of coordinates.
+	 */
 	private class AdjacentCoordinatePair{
-		public final Coordinate c1, c2;
+		private final Coordinate c1, c2;
 		
-		public AdjacentCoordinatePair(Coordinate c1, Coordinate c2){
+		/**
+		 * Constructor for AdjacentCoordinatePair.
+		 * @param c1 Coordinate
+		 * @param c2 Coordinate
+		 */
+		private AdjacentCoordinatePair(Coordinate c1, Coordinate c2){
 			this.c1 = c1;
 			this.c2 = c2;
 		}
