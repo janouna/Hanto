@@ -12,14 +12,14 @@ package hanto.studentjgasfm.gamma;
 
 import hanto.common.HantoCoordinate;
 import hanto.common.HantoException;
-import hanto.common.HantoPiece;
 import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
 import hanto.common.MoveResult;
 import hanto.studentjgasfm.common.BaseHantoGame;
-import hanto.studentjgasfm.common.Coordinate;
 
-
+/**
+ * The third iteration of the Hanto game.
+ */
 public class GammaGame extends BaseHantoGame {
 
 	public GammaGame(HantoPlayerColor c) {
@@ -48,6 +48,10 @@ public class GammaGame extends BaseHantoGame {
 	@Override
 	public MoveResult makeMove(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to) throws HantoException {
 		MoveResult result;
+		
+		if(pieceType != null && pieceType != HantoPieceType.BUTTERFLY && pieceType != HantoPieceType.SPARROW){
+			throw new HantoException("Invalid Piece Type");
+		}
 		
 		if(from != null){
 			result = walk(pieceType, from, to);

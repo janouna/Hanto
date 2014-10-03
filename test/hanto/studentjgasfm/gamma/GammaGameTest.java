@@ -11,7 +11,6 @@
 package hanto.studentjgasfm.gamma;
 
 import static org.junit.Assert.*;
-import hanto.common.HantoCoordinate;
 import hanto.common.HantoException;
 import hanto.common.HantoGame;
 import hanto.common.HantoGameID;
@@ -23,10 +22,6 @@ import hanto.studentjgasfm.common.Coordinate;
 import hanto.studentjgasfm.common.HantoTestGame;
 import hanto.studentjgasfm.common.HantoTestGameFactory;
 import hanto.studentjgasfm.common.HantoTestGame.PieceLocationPair;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,7 +31,6 @@ public class GammaGameTest {
 	HantoTestGame gammaTestRedFirst;
 	HantoGame gamma;
 	HantoGame gammaRedFirst;
-	Map<HantoCoordinate, HantoPiece> pieceList;
 
 	/**
 	 * Method setUp.
@@ -45,7 +39,6 @@ public class GammaGameTest {
 	public void setUp() {
 		HantoTestGameFactory factory = HantoTestGameFactory.getInstance();
 		gammaTest = factory.makeHantoTestGame(HantoGameID.GAMMA_HANTO);
-		pieceList = new HashMap<HantoCoordinate, HantoPiece>();
 		gammaTestRedFirst = factory.makeHantoTestGame(HantoGameID.GAMMA_HANTO, HantoPlayerColor.RED);
 		gamma = gammaTest;
 		gammaRedFirst = gammaTestRedFirst;
@@ -115,7 +108,7 @@ public class GammaGameTest {
 	}
 	
 	@Test (expected = HantoException.class)
-	public void testWalkSurroundedInValid1() throws HantoException{
+	public void testWalkSurroundedInvalid1() throws HantoException{
 		PieceLocationPair[] initialPieces = {
 			new PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.BUTTERFLY, new Coordinate(1,0)),
 			new PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.SPARROW, new Coordinate(1,-1)),
@@ -130,7 +123,7 @@ public class GammaGameTest {
 	}
 	
 	@Test (expected = HantoException.class)
-	public void testWalkSurroundedInValid2() throws HantoException{
+	public void testWalkSurroundedInvalid2() throws HantoException{
 		PieceLocationPair[] initialPieces = {
 			new PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.BUTTERFLY, new Coordinate(1,0)),
 			new PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.SPARROW, new Coordinate(1,-1)),
@@ -151,5 +144,32 @@ public class GammaGameTest {
 		gammaTest.initializeBoard(initialPieces);
 		gammaTest.setTurnNumber(2);
 		gamma.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0,1));
+	}
+	
+	@Test (expected = HantoException.class)
+	public void testWalkInvalid() throws HantoException{
+		PieceLocationPair[] initialPieces = {
+				new PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.SPARROW, new Coordinate(1,0)),
+				new PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.SPARROW, new Coordinate(2,0)),
+				new PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.SPARROW, new Coordinate(0,0)),
+			};
+		gammaTest.initializeBoard(initialPieces);
+		gamma.makeMove(HantoPieceType.SPARROW, new Coordinate(0,0), new Coordinate(1,1));
+	}
+	
+	@Test (expected = HantoException.class)
+	public void testBreakChain() throws HantoException{
+		PieceLocationPair[] initialPieces = {
+				new PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.SPARROW, new Coordinate(1,0)),
+				new PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.SPARROW, new Coordinate(2,0)),
+				new PieceLocationPair(HantoPlayerColor.BLUE, HantoPieceType.SPARROW, new Coordinate(0,0)),
+			};
+		gammaTest.initializeBoard(initialPieces);
+		gamma.makeMove(HantoPieceType.SPARROW, new Coordinate(1,0), new Coordinate(1,1));
+	}
+	
+	@Test (expected = HantoException.class)
+	public void addInvalidPiece() throws HantoException{
+		gamma.makeMove(HantoPieceType.CRAB, null, new Coordinate(0,0));
 	}
 }

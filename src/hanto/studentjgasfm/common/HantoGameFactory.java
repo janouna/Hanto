@@ -11,6 +11,10 @@
 package hanto.studentjgasfm.common;
 
 import hanto.common.*;
+import hanto.studentjgasfm.alpha.AlphaGame;
+import hanto.studentjgasfm.beta.BetaGame;
+import hanto.studentjgasfm.delta.DeltaGame;
+import hanto.studentjgasfm.gamma.GammaGame;
 
 /**
  * This is a singleton class that provides a factory to create an instance of any version
@@ -60,10 +64,16 @@ public class HantoGameFactory
 		HantoGame game = null;
 		switch (gameId) {
 		case ALPHA_HANTO:
-			game = new hanto.studentjgasfm.alpha.AlphaGame();
+			game = new AlphaGame();
 			break;
 		case BETA_HANTO:
-			game = new hanto.studentjgasfm.beta.BetaGame(movesFirst);
+			game = new BetaGame(movesFirst);
+			break;
+		case GAMMA_HANTO:
+			game = new GammaGame(movesFirst);
+			break;
+		case DELTA_HANTO:
+			game = new DeltaGame(movesFirst);
 			break;
 		}
 		return game;
