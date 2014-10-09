@@ -385,8 +385,12 @@ public abstract class BaseHantoGame implements HantoGame {
 		if(player2ButterflyLocation != null){
 			player1Wins = isPieceTrapped(player2ButterflyLocation);
 		}
+		
+		if(moveLimit > 0 && moveCount >= moveLimit){
+			result = MoveResult.DRAW; //Only draw at max turns if there isn't already a winner
+		}
 
-		if ((player1Wins && player2Wins) || (moveLimit > 0 && moveCount >= moveLimit)){
+		if (player1Wins && player2Wins){
 			result = MoveResult.DRAW;
 		} else if (player2Wins){
 			result = getWinner(player2Color);
