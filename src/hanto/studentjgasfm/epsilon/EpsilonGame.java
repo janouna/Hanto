@@ -1,6 +1,5 @@
 package hanto.studentjgasfm.epsilon;
 
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,7 +13,6 @@ import hanto.common.MoveResult;
 import hanto.studentjgasfm.common.BaseHantoGame;
 import hanto.studentjgasfm.common.Coordinate;
 import hanto.studentjgasfm.common.Move;
-import hanto.studentjgasfm.common.Piece;
 
 public class EpsilonGame extends BaseHantoGame {
 
@@ -74,16 +72,16 @@ public class EpsilonGame extends BaseHantoGame {
 			if(p.getColor() == color){
 				switch(p.getType()){
 				case BUTTERFLY:
-					moveList.addAll(getPossibleButterflyMoves(c));
+					moveList.addAll(getPossibleWalkMoves(c));
 					break;
 				case CRAB:
-					moveList.addAll(getPossibleCrabMoves(c));
+					moveList.addAll(getPossibleWalkMoves(c));
 					break;
 				case SPARROW:
-					moveList.addAll(getPossibleSparrowMoves(c));
+					moveList.addAll(getPossibleFlyMoves(c));
 					break;
 				case HORSE:
-					moveList.addAll(getPossibleHorseMoves(c));
+					moveList.addAll(getPossibleJumpMoves(c));
 					break;
 				}
 			}
@@ -91,7 +89,7 @@ public class EpsilonGame extends BaseHantoGame {
 		
 		return moveList;
 	}
-	private List<Move> getPossibleButterflyMoves(Coordinate c) {
+	private List<Move> getPossibleWalkMoves(Coordinate c) {
 		List<Move> moveList = new LinkedList<Move>();
 		
 		for(Coordinate d: getAdjacentSpaces(c)){
@@ -103,23 +101,54 @@ public class EpsilonGame extends BaseHantoGame {
 		}
 		return moveList;
 	}
-	private List<Move> getPossibleCrabMoves(Coordinate c) {
+	private List<Move> getPossibleFlyMoves(Coordinate c) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	private List<Move> getPossibleSparrowMoves(Coordinate c) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	private List<Move> getPossibleHorseMoves(Coordinate c) {
+	private List<Move> getPossibleJumpMoves(Coordinate c) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	private MoveResult jump(HantoPieceType pieceType, HantoCoordinate from,
-			HantoCoordinate to) {
-		// TODO Auto-generated method stub
-		return null;
+	private MoveResult jump(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to) throws HantoException {
+		boolean validJump = true;
+		
+		if(from.getX() == to.getX()){
+			int min = Math.min(from.getY(), to.getY());
+			int max = Math.max(from.getY(), to.getY());
+			int x = from.getX();
+			for(int i = min + 1; i < max; i++){
+				if(!pieceList.containsKey(new Coordinate(x,i))){
+					validJump = false;
+				}
+			}
+		}else if(from.getY() == to.getY()){
+			int min = Math.min(from.getX(), to.getX());
+			int max = Math.max(from.getX(), to.getX());
+			int y = from.getY();
+			for(int i = min + 1; i < max; i++){
+				if(!pieceList.containsKey(new Coordinate(i,y))){
+					validJump = false;
+				}
+			}
+		}else if((from.getX() - to.getX()) == -1 * (from.getY() - to.getY())){
+			int xMin = Math.min(from.getX(), to.getX());
+			int xMax = Math.max(from.getX(), to.getX());
+			int yMax = Math.max(from.getY(), to.getY());
+			for(int i = 1; i < xMax - xMin; i++){
+				if(!pieceList.containsKey(new Coordinate(xMin + i, yMax - i))){
+					validJump = false;
+				}
+			}
+		}else{
+			throw new HantoException("Invalid jump direction");
+		}
+		
+		if(validJump){
+			return moveValidator(pieceType, from, to);
+		}else{
+			throw new HantoException("Jump path not continuous");
+		}
 	}
 
 }

@@ -12,6 +12,7 @@ package hanto.studentjgasfm.common;
 
 import hanto.common.*;
 import hanto.studentjgasfm.delta.DeltaTestGame;
+import hanto.studentjgasfm.epsilon.EpsilonTestGame;
 import hanto.studentjgasfm.gamma.GammaTestGame;
 
 /**
@@ -64,6 +65,8 @@ public class HantoTestGameFactory
 			case DELTA_HANTO:
 				game = new DeltaTestGame(movesFirst);
 				break;
+			case EPSILON_HANTO:
+				game = new EpsilonTestGame(movesFirst);
 		}
 		return game;
 	}
