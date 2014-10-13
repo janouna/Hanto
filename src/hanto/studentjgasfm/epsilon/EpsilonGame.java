@@ -1,5 +1,6 @@
 package hanto.studentjgasfm.epsilon;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -62,7 +63,7 @@ public class EpsilonGame extends BaseHantoGame {
 		}
 	}
 
-	public List<Move> getPossibleMoveList() {
+	public List<Move> getPossibleMoveList() { // TODO Add place pieces
 		List<Move> moveList = new LinkedList<Move>();
 		HantoPlayerColor color = moveCount % 2 == 1 ? player1Color : player2Color;
 		
@@ -72,16 +73,18 @@ public class EpsilonGame extends BaseHantoGame {
 			if(p.getColor() == color){
 				switch(p.getType()){
 				case BUTTERFLY:
-					moveList.addAll(getPossibleWalkMoves(c));
+					moveList.addAll(getPossibleWalkMoves(HantoPieceType.BUTTERFLY, c, color));
 					break;
 				case CRAB:
-					moveList.addAll(getPossibleWalkMoves(c));
+					moveList.addAll(getPossibleWalkMoves(HantoPieceType.CRAB, c, color));
 					break;
 				case SPARROW:
-					moveList.addAll(getPossibleFlyMoves(c));
+					moveList.addAll(getPossibleFlyMoves(HantoPieceType.SPARROW, c, color));
 					break;
 				case HORSE:
-					moveList.addAll(getPossibleJumpMoves(c));
+					moveList.addAll(getPossibleJumpMoves(HantoPieceType.HORSE, c, color));
+					break;
+				default:
 					break;
 				}
 			}
@@ -89,29 +92,78 @@ public class EpsilonGame extends BaseHantoGame {
 		
 		return moveList;
 	}
-	private List<Move> getPossibleWalkMoves(Coordinate c) {
+	private List<Move> getPossibleWalkMoves(HantoPieceType piece, Coordinate c, HantoPlayerColor color) {
 		List<Move> moveList = new LinkedList<Move>();
 		
 		for(Coordinate d: getAdjacentSpaces(c)){
 			MoveResult result;
 			try{
-				result = walk(HantoPieceType.BUTTERFLY, c, d);
-				moveList.add(new Move(HantoPieceType.BUTTERFLY, c, d, result));
+				result = walk(piece, c, d);
+				moveList.add(new Move(piece, c, d, result));
+				revertMove(piece, c, d, color);
 			}catch(HantoException e){}
 		}
 		return moveList;
 	}
-	private List<Move> getPossibleFlyMoves(Coordinate c) {
-		// TODO Auto-generated method stub
-		return null;
+	private List<Move> getPossibleFlyMoves(HantoPieceType piece, Coordinate c, HantoPlayerColor color) {
+		List<Move> moveList = new LinkedList<Move>();
+		
+		List<Coordinate> validFlyList = new LinkedList<Coordinate>();
+		List<Coordinate> toVisitList = getAdjacentSpaces(c);
+		
+		for(int i = 0; i < 3; i++){
+			ArrayList<Coordinate> tempList = new ArrayList<Coordinate>(toVisitList);
+			while(tempList.size() > 0){
+				Coordinate tempCoordinate = tempList.get(0);
+				validFlyList.addAll(getAdjacentSpaces(tempCoordinate));
+				toVisitList.addAll(getAdjacentSpaces(tempCoordinate));
+			}
+		}
+		
+		for(Coordinate coordinate: validFlyList){
+			MoveResult result;
+			try{
+				result = fly(piece, c, coordinate);
+				moveList.add(new Move(piece, c, coordinate, result));
+				revertMove(piece, c, coordinate, color);
+			}catch(HantoException e){}
+		}
+		
+		return moveList;
 	}
-	private List<Move> getPossibleJumpMoves(Coordinate c) {
+	private List<Move> getPossibleJumpMoves(HantoPieceType piece, Coordinate c, HantoPlayerColor color) {
+		List<Move> moveList = new LinkedList<Move>();
+		
+		for(Coordinate d: getAdjacentPieceList(c)){
+			Coordinate prevCoordinate = c;
+			Coordinate farCoordinate = d;
+			while(pieceList.containsKey(farCoordinate)){
+				Coordinate temp = farCoordinate;
+				farCoordinate = getFarCoordinate(prevCoordinate, temp);
+				prevCoordinate = temp;
+			}
+			
+			MoveResult result;
+			try{
+				result = jump(piece, c, farCoordinate);
+				moveList.add(new Move(piece, c, farCoordinate, result));
+				revertMove(piece, c, farCoordinate, color);
+			}catch(HantoException e){}
+		}
+		
+		return moveList;
+	}
+	private Coordinate getFarCoordinate(Coordinate from, Coordinate to) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	private MoveResult jump(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to) throws HantoException {
 		boolean validJump = true;
+		
+		if(getAdjacentSpaces(from).contains(to)){
+			throw new HantoException("Can't jump to an adjacent space");
+		}
 		
 		if(from.getX() == to.getX()){
 			int min = Math.min(from.getY(), to.getY());

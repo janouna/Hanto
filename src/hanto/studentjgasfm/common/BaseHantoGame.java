@@ -89,7 +89,7 @@ public abstract class BaseHantoGame implements HantoGame {
 		return getWinner(color);
 	}
 
-	protected MoveResult fly(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to) throws HantoException {
+	protected MoveResult fly(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to) throws HantoException { // TODO Add maximum fly distance
 		return moveValidator(pieceType, from, to);
 	}
 
@@ -258,7 +258,7 @@ public abstract class BaseHantoGame implements HantoGame {
 	 * @param to The location that the piece is moving to
 	 * @param color The color of the current player
 	 */
-	private void revertMove(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to, HantoPlayerColor color) {
+	protected void revertMove(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to, HantoPlayerColor color) {
 		pieceList.remove(new Coordinate(to));
 		if(from != null){
 			pieceList.put(new Coordinate(from), new Piece(color, pieceType));
