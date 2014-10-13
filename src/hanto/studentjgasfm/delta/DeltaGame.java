@@ -52,15 +52,4 @@ public class DeltaGame extends BaseHantoGame {
 
 		return result;
 	}
-
-	private MoveResult resign() {
-		HantoPlayerColor color = moveCount % 2 == 0 ? player1Color : player2Color;
-		resigned = true;
-		return getWinner(color);
-	}
-
-	private MoveResult fly(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to) throws HantoException {
-		return moveValidator(pieceType, from, to);
-	}
-
 }

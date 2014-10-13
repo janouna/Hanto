@@ -32,12 +32,12 @@ public abstract class BaseHantoGame implements HantoGame {
 	protected int moveCount, moveLimit, turnLimit;
 	protected boolean player1ButterflyPlaced, player2ButterflyPlaced;
 	protected HantoPlayerColor player1Color, player2Color;
-	protected Coordinate player1ButterflyLocation;
-	protected Coordinate player2ButterflyLocation;
+	protected Coordinate player1ButterflyLocation, player2ButterflyLocation;
 	protected int player1SparrowCount, player2SparrowCount;
-	protected int player2CrabCount;
-	protected int player1CrabCount;
+	protected int player2CrabCount, player1CrabCount;
+	protected int player1HorseCount, player2HorseCount;
 	protected boolean resigned;
+	protected int maxFlyDistance;
 
 	/**
 	 * Constructor for BaseHantoGame.
@@ -54,9 +54,10 @@ public abstract class BaseHantoGame implements HantoGame {
 		player2SparrowCount = 0;
 		player2CrabCount = 0;
 		player1CrabCount = 0;
-		turnLimit = 0;
+		turnLimit = 0; // Zero means no turn limit
 		moveLimit = turnLimit * 2;
 		resigned = false;
+		maxFlyDistance = 0; // Zero means no max fly distance
 	}
 
 	@Override
@@ -66,7 +67,6 @@ public abstract class BaseHantoGame implements HantoGame {
 	public HantoPiece getPieceAt(HantoCoordinate where) {
 		return pieceList.get(new Coordinate(where));
 	}
-
 
 	/**
 	 * Returns a string that contains the values of each piece on the board and their locations
@@ -81,6 +81,16 @@ public abstract class BaseHantoGame implements HantoGame {
 		}
 
 		return board;
+	}
+	
+	protected MoveResult resign() {
+		HantoPlayerColor color = moveCount % 2 == 0 ? player1Color : player2Color;
+		resigned = true;
+		return getWinner(color);
+	}
+
+	protected MoveResult fly(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to) throws HantoException {
+		return moveValidator(pieceType, from, to);
 	}
 
 	/**
@@ -208,6 +218,7 @@ public abstract class BaseHantoGame implements HantoGame {
 	private void completeTurn(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to, HantoPlayerColor color) throws HantoException{
 		int sparrowCount = moveCount % 2 == 1 ? player1SparrowCount : player2SparrowCount;
 		int crabCount = moveCount % 2 == 1 ? player1CrabCount : player2CrabCount;
+		int horseCount = moveCount % 2 == 1 ? player1HorseCount : player2HorseCount;
 		boolean butterflyPlaced = moveCount % 2 == 1 ? player1ButterflyPlaced : player2ButterflyPlaced;
 		
 		if(from != null){
@@ -217,8 +228,9 @@ public abstract class BaseHantoGame implements HantoGame {
 			}else{
 				pieceList.remove(new Coordinate(from));
 			}
-		}else if((pieceType.equals(HantoPieceType.SPARROW) && sparrowCount == 0) || 
-				(pieceType.equals(HantoPieceType.CRAB) && crabCount == 0) ||
+		}else if((pieceType.equals(HantoPieceType.SPARROW) && sparrowCount < 1) || 
+				(pieceType.equals(HantoPieceType.CRAB) && crabCount < 1) ||
+				(pieceType.equals(HantoPieceType.HORSE) && horseCount < 1) ||
 				(pieceType.equals(HantoPieceType.BUTTERFLY) && butterflyPlaced)){
 			throw new HantoException("No more of that piece remain");
 		}
@@ -228,8 +240,12 @@ public abstract class BaseHantoGame implements HantoGame {
 		if(!isConnected(to)){
 			revertMove(pieceType, from, to, color);
 			throw new HantoException("Move causes a break in the piece chain");
-		}else{				
-			piecePlaced(pieceType, color, to);
+		}else{
+			if(from == null){
+				piecePlaced(pieceType, color, to);
+			}else if(pieceType == HantoPieceType.BUTTERFLY){
+				butterflyMoved(color, to);
+			}
 			moveCount++;
 		}
 	}
@@ -256,8 +272,7 @@ public abstract class BaseHantoGame implements HantoGame {
 	 * @param playerColor The color of the current player
 	 * @param to The location that the piece is moving to
 	 */
-	protected void piecePlaced(HantoPieceType pieceType,
-			HantoPlayerColor playerColor, HantoCoordinate to) {
+	protected void piecePlaced(HantoPieceType pieceType, HantoPlayerColor playerColor, HantoCoordinate to) {
 		switch (pieceType){
 		case BUTTERFLY: 
 			butterflyPlaced(playerColor, to);
@@ -268,16 +283,24 @@ public abstract class BaseHantoGame implements HantoGame {
 		case CRAB:
 			crabPlaced(playerColor);
 			break;
+		case HORSE:
+			horsePlaced(playerColor);
 		default:
 			break;
 		}
 	}
-	private void butterflyPlaced(HantoPlayerColor playerColor, HantoCoordinate to) {
-		if (playerColor.equals(player1Color)) {
+	private void butterflyPlaced(HantoPlayerColor color, HantoCoordinate to) {
+		if (color.equals(player1Color)) {
 			player1ButterflyPlaced = true;
-			player1ButterflyLocation = new Coordinate(to);
-		} else if(playerColor.equals(player2Color)) {
+		} else if(color.equals(player2Color)) {
 			player2ButterflyPlaced = true;
+		}
+		butterflyMoved(color, to);
+	}
+	private void butterflyMoved(HantoPlayerColor color, HantoCoordinate to) {
+		if (color.equals(player1Color)) {
+			player1ButterflyLocation = new Coordinate(to);
+		} else if(color.equals(player2Color)) {
 			player2ButterflyLocation = new Coordinate(to);
 		}
 	}
@@ -293,6 +316,13 @@ public abstract class BaseHantoGame implements HantoGame {
 			player1CrabCount -= 1;
 		} else {
 			player2CrabCount -= 1;
+		}
+	}
+	private void horsePlaced(HantoPlayerColor playerColor) {
+		if (playerColor.equals(player1Color)) {
+			player1HorseCount -= 1;
+		} else {
+			player2HorseCount -= 1;
 		}
 	}
 
