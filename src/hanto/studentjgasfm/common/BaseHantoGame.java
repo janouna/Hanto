@@ -16,8 +16,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.sun.org.apache.bcel.internal.generic.NEW;
-
 import hanto.common.HantoCoordinate;
 import hanto.common.HantoException;
 import hanto.common.HantoGame;
@@ -91,7 +89,7 @@ public abstract class BaseHantoGame implements HantoGame {
 		return getWinner(color);
 	}
 
-	protected MoveResult fly(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to) throws HantoException { // TODO Add maximum fly distance
+	protected MoveResult fly(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to) throws HantoException {
 		if(maxFlyDistance < 1 || getValidFlyArea(from).contains(new Coordinate(to))){
 			return moveValidator(pieceType, from, to);
 		}else{
@@ -171,7 +169,7 @@ public abstract class BaseHantoGame implements HantoGame {
 	 * @param to The location the piece is moving to
 	 * @return The AdjacentCoordinatePair containing the two coordinates adjacent to both to and from
 	 */
-	private AdjacentCoordinatePair getAdjacentToFromSpaces(HantoCoordinate from, HantoCoordinate to){
+	private static AdjacentCoordinatePair getAdjacentToFromSpaces(HantoCoordinate from, HantoCoordinate to){
 		Coordinate adj1 = null;
 		Coordinate adj2 = null;
 		Coordinate t = new Coordinate(to);
@@ -397,7 +395,7 @@ public abstract class BaseHantoGame implements HantoGame {
 	 * @param to The current coordinate
 	 * @return The list of coordinates adjacent that contain pieces
 	 */
-	protected List<Coordinate> getAdjacentPieceList(Coordinate to){
+	public List<Coordinate> getAdjacentPieceList(Coordinate to){
 		List<Coordinate> l = new LinkedList<Coordinate>();
 
 		for(Coordinate i: getAdjacentSpaces(to)){
@@ -412,7 +410,7 @@ public abstract class BaseHantoGame implements HantoGame {
 	 * @param to The current coordinate
 	 * @return The list of coordinates adjacent
 	 */
-	protected static List<Coordinate> getAdjacentSpaces(HantoCoordinate to){
+	public static List<Coordinate> getAdjacentSpaces(HantoCoordinate to){
 		List<Coordinate> l = new LinkedList<Coordinate>();
 
 		Coordinate oneUp = new Coordinate(to.getX(), to.getY() + 1);
@@ -479,7 +477,7 @@ public abstract class BaseHantoGame implements HantoGame {
 	 * @param playerColor The color of the winner
 	 * @return The MoveResult corresponding to the winner
 	 */
-	protected MoveResult getWinner(HantoPlayerColor playerColor){
+	protected static MoveResult getWinner(HantoPlayerColor playerColor){
 		MoveResult result = null;
 		switch (playerColor){
 		case RED: 
@@ -496,7 +494,7 @@ public abstract class BaseHantoGame implements HantoGame {
 	/**
 	 * Contains a pair of coordinates adjacent to a to and from pair of coordinates.
 	 */
-	private class AdjacentCoordinatePair{
+	private static class AdjacentCoordinatePair{
 		private final Coordinate c1, c2;
 		
 		/**
