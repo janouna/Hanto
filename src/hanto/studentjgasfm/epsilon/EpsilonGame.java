@@ -1,8 +1,12 @@
 package hanto.studentjgasfm.epsilon;
 
+import java.time.Year;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+
+import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
 
 import hanto.common.HantoCoordinate;
 import hanto.common.HantoException;
@@ -63,9 +67,13 @@ public class EpsilonGame extends BaseHantoGame {
 		}
 	}
 
-	public List<Move> getPossibleMoveList() { // TODO Add place pieces
+	public List<Move> getPossibleMoveList() {
 		List<Move> moveList = new LinkedList<Move>();
 		HantoPlayerColor color = moveCount % 2 == 1 ? player1Color : player2Color;
+		
+		if(moveCount <= 2){
+			moveList.addAll(getPossiblePlacedPieces(new Coordinate(0,0)));
+		}
 		
 		for(Coordinate c: pieceList.keySet()){
 			HantoPiece p = pieceList.get(c);
@@ -87,6 +95,8 @@ public class EpsilonGame extends BaseHantoGame {
 				default:
 					break;
 				}
+				
+				moveList.addAll(getPossiblePlacedPieces(c));
 			}
 		}
 		
@@ -96,12 +106,7 @@ public class EpsilonGame extends BaseHantoGame {
 		List<Move> moveList = new LinkedList<Move>();
 		
 		for(Coordinate d: getAdjacentSpaces(c)){
-			MoveResult result;
-			try{
-				result = walk(piece, c, d);
-				moveList.add(new Move(piece, c, d, result));
-				revertMove(piece, c, d, color);
-			}catch(HantoException e){}
+			testMovePiece(moveList, c, d, piece, color);
 		}
 		return moveList;
 	}
@@ -121,12 +126,7 @@ public class EpsilonGame extends BaseHantoGame {
 		}
 		
 		for(Coordinate coordinate: validFlyList){
-			MoveResult result;
-			try{
-				result = fly(piece, c, coordinate);
-				moveList.add(new Move(piece, c, coordinate, result));
-				revertMove(piece, c, coordinate, color);
-			}catch(HantoException e){}
+			testMovePiece(moveList, c, coordinate, piece, color);
 		}
 		
 		return moveList;
@@ -143,19 +143,101 @@ public class EpsilonGame extends BaseHantoGame {
 				prevCoordinate = temp;
 			}
 			
-			MoveResult result;
-			try{
-				result = jump(piece, c, farCoordinate);
-				moveList.add(new Move(piece, c, farCoordinate, result));
-				revertMove(piece, c, farCoordinate, color);
-			}catch(HantoException e){}
+			testMovePiece(moveList, c, farCoordinate, piece, color);
 		}
 		
 		return moveList;
 	}
 	private Coordinate getFarCoordinate(Coordinate from, Coordinate to) {
-		// TODO Auto-generated method stub
-		return null;
+		int xDiff = to.getX() - from.getX();
+		int yDiff = to.getY() - from.getY();
+		return new Coordinate(to.getX() + xDiff, to.getY() + yDiff);
+	}
+	private void testMovePiece(List<Move> moveList, Coordinate from, Coordinate to, HantoPieceType piece, HantoPlayerColor color){
+		try{
+			MoveResult result = jump(piece, from, to);
+			moveList.add(new Move(piece, from, to, result));
+			revertMove(piece, from, to, color);
+		}catch(HantoException e){}
+	}
+	
+	private List<Move> getPossiblePlacedPieces(Coordinate c) {
+		List<Move> moveList = new LinkedList<Move>();
+		HantoPlayerColor color = moveCount % 2 == 1 ? player1Color : player2Color;
+		List<Coordinate> adjacentList;
+		
+		if(moveCount == 1){
+			adjacentList = new LinkedList<>();
+			adjacentList.add(new Coordinate(0,0));
+		}else {
+			adjacentList = getAdjacentSpaces(c);
+		}
+		
+		for(Coordinate coordinate: adjacentList){
+			if(!pieceList.containsKey(coordinate)){
+				boolean opponentPieces = false;
+				for(Coordinate piece: getAdjacentPieceList(coordinate)){
+					if(pieceList.get(piece).getColor() != color){
+						opponentPieces = true;
+					}
+				}
+				if(!opponentPieces || moveCount <= 2){
+					testPlacePiece(moveList, coordinate, HantoPieceType.BUTTERFLY);
+					testPlacePiece(moveList, coordinate, HantoPieceType.SPARROW);
+					testPlacePiece(moveList, coordinate, HantoPieceType.CRAB);
+					testPlacePiece(moveList, coordinate, HantoPieceType.HORSE);
+				}
+			}
+		}
+		
+		return moveList;
+	}
+	private void testPlacePiece(List<Move> moveList, Coordinate coordinate, HantoPieceType piece) {
+		try{
+			MoveResult result = moveValidator(piece, null, coordinate);
+			moveList.add(new Move(piece, null, coordinate, result));
+			revertPlacePiece(piece, coordinate);
+		}catch(HantoException e){}
+		
+	}
+	private void revertPlacePiece(HantoPieceType piece, Coordinate coordinate) {
+		HantoPlayerColor color = moveCount % 2 == 1 ? player1Color : player2Color;
+		
+		pieceList.remove(coordinate);
+		switch(piece){
+		case BUTTERFLY:
+			if(color == player1Color){
+				player1ButterflyLocation = null;
+				player1ButterflyPlaced = false;
+			}else{
+				player2ButterflyLocation = null;
+				player2ButterflyPlaced = false;
+			}
+			break;
+		case SPARROW:
+			if(color == player1Color){
+				player1SparrowCount += 1;
+			}else{
+				player2SparrowCount += 1;
+			}
+			break;
+		case CRAB:
+			if(color == player1Color){
+				player1CrabCount += 1;
+			}else{
+				player2CrabCount += 1;
+			}
+			break;
+		case HORSE:
+			if(color == player1Color){
+				player1HorseCount += 1;
+			}else{
+				player2HorseCount += 1;
+			}
+			break;
+		default:
+			break;
+		}
 	}
 
 	private MoveResult jump(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to) throws HantoException {
