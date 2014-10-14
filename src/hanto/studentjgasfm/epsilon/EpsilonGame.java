@@ -112,18 +112,7 @@ public class EpsilonGame extends BaseHantoGame {
 	}
 	private List<Move> getPossibleFlyMoves(HantoPieceType piece, Coordinate c, HantoPlayerColor color) {
 		List<Move> moveList = new LinkedList<Move>();
-		
-		List<Coordinate> validFlyList = new LinkedList<Coordinate>();
-		List<Coordinate> toVisitList = getAdjacentSpaces(c);
-		
-		for(int i = 0; i < 3; i++){
-			ArrayList<Coordinate> tempList = new ArrayList<Coordinate>(toVisitList);
-			while(tempList.size() > 0){
-				Coordinate tempCoordinate = tempList.get(0);
-				validFlyList.addAll(getAdjacentSpaces(tempCoordinate));
-				toVisitList.addAll(getAdjacentSpaces(tempCoordinate));
-			}
-		}
+		List<Coordinate> validFlyList = getValidFlyArea(c);
 		
 		for(Coordinate coordinate: validFlyList){
 			testMovePiece(moveList, c, coordinate, piece, color);

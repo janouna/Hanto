@@ -16,6 +16,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.sun.org.apache.bcel.internal.generic.NEW;
+
 import hanto.common.HantoCoordinate;
 import hanto.common.HantoException;
 import hanto.common.HantoGame;
@@ -90,7 +92,32 @@ public abstract class BaseHantoGame implements HantoGame {
 	}
 
 	protected MoveResult fly(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to) throws HantoException { // TODO Add maximum fly distance
-		return moveValidator(pieceType, from, to);
+		if(maxFlyDistance < 1 || getValidFlyArea(from).contains(new Coordinate(to))){
+			return moveValidator(pieceType, from, to);
+		}else{
+			throw new HantoException("Outside valid fly range");
+		}
+	}
+	protected List<Coordinate> getValidFlyArea(HantoCoordinate c) {
+		List<Coordinate> validFlyList = getAdjacentSpaces(c);
+		List<Coordinate> toVisitList = getAdjacentSpaces(c);
+		
+		for(int i = 1; i < maxFlyDistance; i++){
+			List<Coordinate> tempList = toVisitList;
+			toVisitList = new ArrayList<Coordinate>();
+			while(tempList.size() > 0){
+				Coordinate tempCoordinate = tempList.get(0);
+				tempList.remove(0);
+				for(Coordinate e: getAdjacentSpaces(tempCoordinate)){
+					if(!validFlyList.contains(e) && !e.equals(c)){
+						validFlyList.add(e);
+						toVisitList.add(e);
+					}
+				}
+			}
+		}
+		
+		return validFlyList;
 	}
 
 	/**
