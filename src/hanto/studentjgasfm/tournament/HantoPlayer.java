@@ -10,6 +10,8 @@
 
 package hanto.studentjgasfm.tournament;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -50,16 +52,10 @@ public class HantoPlayer implements HantoGamePlayer {
 	public HantoMoveRecord makeMove(HantoMoveRecord opponentsMove) {
 		HantoMoveRecord myMove = new HantoMoveRecord(null, null, null);
 		List<Move> winList = new LinkedList<Move>();
-		List<Move> okList = new LinkedList<Move>();
+		Map<Coordinate, List<Move>> okList = new HashMap<Coordinate, List<Move>>();
 		List<Move> moveButterflyList = new LinkedList<Move>();
 		List<Move> surroundEnemyList = new LinkedList<Move>();
 		Coordinate enemyButterfly = null;
-		/*
-		try{
-			
-		}catch(HantoException e){
-			System.out.println(e.getMessage());
-		}*/
 		
 		try{
 			if(opponentsMove != null){
@@ -79,7 +75,15 @@ public class HantoPlayer implements HantoGamePlayer {
 				if(m.result == winColor){
 					winList.add(m);
 				}else if(m.result == MoveResult.OK){
-					okList.add(m);
+					List<Move> temp;
+					Coordinate from = m.from == null ? null : new Coordinate(m.from);
+					if(okList.containsKey(from)){
+						temp = new LinkedList<Move>(okList.get(from));
+						okList.remove(from);
+					}else
+						temp = new LinkedList<Move>();
+					temp.add(m);
+					okList.put(from, temp);
 				}
 				
 				if(m.piece == HantoPieceType.BUTTERFLY && m.from != null){
@@ -88,8 +92,10 @@ public class HantoPlayer implements HantoGamePlayer {
 					}
 				}
 				
-				if(enemyButterfly != null && EpsilonGame.getAdjacentSpaces(enemyButterfly).contains(m.to)){
-					surroundEnemyList.add(m);
+				if(enemyButterfly != null && EpsilonGame.getAdjacentSpaces(enemyButterfly).contains(new Coordinate(m.to))){
+					if(m.from == null || !EpsilonGame.getAdjacentSpaces(enemyButterfly).contains(new Coordinate(m.from))){
+						surroundEnemyList.add(m);
+					}
 				}
 			}
 			
@@ -103,7 +109,10 @@ public class HantoPlayer implements HantoGamePlayer {
 				Move move = surroundEnemyList.get((int) Math.floor(Math.random() * surroundEnemyList.size()));
 				myMove = new HantoMoveRecord(move.piece, move.from, move.to);
 			}else if(!okList.isEmpty()){
-				Move move = okList.get((int) Math.floor(Math.random() * okList.size()));
+				List<Coordinate> coordinateList = new ArrayList<Coordinate>(okList.keySet());
+				Coordinate coordinate = coordinateList.get((int) Math.floor(Math.random() * coordinateList.size()));
+				List<Move> moveFrom = okList.get(coordinate);
+				Move move = moveFrom.get((int) Math.floor(Math.random() * moveFrom.size()));
 				myMove = new HantoMoveRecord(move.piece, move.from, move.to);
 			}else if(!moveList.isEmpty()){
 				Move move = moveList.get((int) Math.floor(Math.random() * moveList.size()));
