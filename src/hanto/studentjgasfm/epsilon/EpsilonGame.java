@@ -28,6 +28,9 @@ import hanto.studentjgasfm.common.BaseHantoGame;
 import hanto.studentjgasfm.common.Coordinate;
 import hanto.studentjgasfm.common.Move;
 
+/**
+ * The fifth iteration of the Hanto game.
+ */
 public class EpsilonGame extends BaseHantoGame {
 
 	public EpsilonGame(HantoPlayerColor c) {
@@ -76,15 +79,19 @@ public class EpsilonGame extends BaseHantoGame {
 		}
 	}
 
+	/**
+	 * Gets a list of all possible moves for the current color
+	 * @return A list of all possible moves
+	 */
 	public List<Move> getPossibleMoveList() {
-		List<Move> moveList = new LinkedList<Move>();
-		HantoPlayerColor color = moveCount % 2 == 1 ? player1Color : player2Color;
+		final List<Move> moveList = new LinkedList<Move>();
+		final HantoPlayerColor color = moveCount % 2 == 1 ? player1Color : player2Color;
 		
 		if(moveCount <= 2){
-			moveList.addAll(getPossiblePlacedPieces(new Coordinate(0,0)));
+			moveList.addAll(getPossiblePlacedPieces(new Coordinate(0, 0)));
 		}
 		
-		Set<Coordinate> keySet = new HashSet<Coordinate>(pieceList.keySet());
+		final Set<Coordinate> keySet = new HashSet<Coordinate>(pieceList.keySet());
 		for(Coordinate c: keySet){
 			HantoPiece p = pieceList.get(c);
 			
@@ -113,7 +120,7 @@ public class EpsilonGame extends BaseHantoGame {
 		return moveList;
 	}
 	private List<Move> getPossibleWalkMoves(HantoPieceType piece, Coordinate from, HantoPlayerColor color) {
-		List<Move> moveList = new LinkedList<Move>();
+		final List<Move> moveList = new LinkedList<Move>();
 		
 		for(Coordinate to: getAdjacentSpaces(from)){
 			boolean completed;
@@ -133,8 +140,8 @@ public class EpsilonGame extends BaseHantoGame {
 		return moveList;
 	}
 	private List<Move> getPossibleFlyMoves(HantoPieceType piece, Coordinate from, HantoPlayerColor color) {
-		List<Move> moveList = new LinkedList<Move>();
-		List<Coordinate> validFlyList = getValidFlyArea(from);
+		final List<Move> moveList = new LinkedList<Move>();
+		final List<Coordinate> validFlyList = getValidFlyArea(from);
 		
 		for(Coordinate to: validFlyList){
 			boolean completed;
@@ -155,7 +162,7 @@ public class EpsilonGame extends BaseHantoGame {
 		return moveList;
 	}
 	private List<Move> getPossibleJumpMoves(HantoPieceType piece, Coordinate from, HantoPlayerColor color) {
-		List<Move> moveList = new LinkedList<Move>();
+		final List<Move> moveList = new LinkedList<Move>();
 		
 		for(Coordinate to: getAdjacentPieceList(from)){
 			Coordinate prevCoordinate = from;
@@ -184,8 +191,8 @@ public class EpsilonGame extends BaseHantoGame {
 		return moveList;
 	}
 	private static Coordinate getFarCoordinate(Coordinate from, Coordinate to) {
-		int xDiff = to.getX() - from.getX();
-		int yDiff = to.getY() - from.getY();
+		final int xDiff = to.getX() - from.getX();
+		final int yDiff = to.getY() - from.getY();
 		return new Coordinate(to.getX() + xDiff, to.getY() + yDiff);
 	}
 	private void revertTestMove(HantoPieceType piece, Coordinate from, Coordinate to, HantoPlayerColor color) {
@@ -194,13 +201,13 @@ public class EpsilonGame extends BaseHantoGame {
 	}
 	
 	private List<Move> getPossiblePlacedPieces(Coordinate c) {
-		List<Move> moveList = new LinkedList<Move>();
-		HantoPlayerColor color = moveCount % 2 == 1 ? player1Color : player2Color;
+		final List<Move> moveList = new LinkedList<Move>();
+		final HantoPlayerColor color = moveCount % 2 == 1 ? player1Color : player2Color;
 		List<Coordinate> adjacentList;
 		
 		if(moveCount == 1){
 			adjacentList = new LinkedList<>();
-			adjacentList.add(new Coordinate(0,0));
+			adjacentList.add(new Coordinate(0, 0));
 		}else {
 			adjacentList = getAdjacentSpaces(c);
 		}
@@ -242,7 +249,7 @@ public class EpsilonGame extends BaseHantoGame {
 	}
 	private void revertPlacePiece(HantoPieceType piece, Coordinate coordinate) {
 		moveCount--;
-		HantoPlayerColor color = moveCount % 2 == 1 ? player1Color : player2Color;
+		final HantoPlayerColor color = moveCount % 2 == 1 ? player1Color : player2Color;
 		
 		pieceList.remove(coordinate);
 		switch(piece){
@@ -289,27 +296,27 @@ public class EpsilonGame extends BaseHantoGame {
 		}
 		
 		if(from.getX() == to.getX()){
-			int min = Math.min(from.getY(), to.getY());
-			int max = Math.max(from.getY(), to.getY());
-			int x = from.getX();
+			final int min = Math.min(from.getY(), to.getY());
+			final int max = Math.max(from.getY(), to.getY());
+			final int x = from.getX();
 			for(int i = min + 1; i < max; i++){
-				if(!pieceList.containsKey(new Coordinate(x,i))){
+				if(!pieceList.containsKey(new Coordinate(x, i))){
 					validJump = false;
 				}
 			}
 		}else if(from.getY() == to.getY()){
-			int min = Math.min(from.getX(), to.getX());
-			int max = Math.max(from.getX(), to.getX());
-			int y = from.getY();
+			final int min = Math.min(from.getX(), to.getX());
+			final int max = Math.max(from.getX(), to.getX());
+			final int y = from.getY();
 			for(int i = min + 1; i < max; i++){
-				if(!pieceList.containsKey(new Coordinate(i,y))){
+				if(!pieceList.containsKey(new Coordinate(i, y))){
 					validJump = false;
 				}
 			}
 		}else if((from.getX() - to.getX()) == -1 * (from.getY() - to.getY())){
-			int xMin = Math.min(from.getX(), to.getX());
-			int xMax = Math.max(from.getX(), to.getX());
-			int yMax = Math.max(from.getY(), to.getY());
+			final int xMin = Math.min(from.getX(), to.getX());
+			final int xMax = Math.max(from.getX(), to.getX());
+			final int yMax = Math.max(from.getY(), to.getY());
 			for(int i = 1; i < xMax - xMin; i++){
 				if(!pieceList.containsKey(new Coordinate(xMin + i, yMax - i))){
 					validJump = false;

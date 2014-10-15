@@ -28,7 +28,7 @@ import java.util.Map;
  * First Hanto Variation
  */
 public class AlphaGame implements HantoGame {
-	private Map<Coordinate, HantoPiece> pieceList;
+	private final Map<Coordinate, HantoPiece> pieceList;
 	private int moveCount;
 
 	/**
@@ -60,7 +60,7 @@ public class AlphaGame implements HantoGame {
 		return result;
 	}
 
-	private boolean isAdjacentToOrigin(HantoCoordinate to) {
+	private static boolean isAdjacentToOrigin(HantoCoordinate to) {
 		//True 0,1 ; 1,0 ; 0,-1 ; -1,0 ; 1,-1 ; -1,1;  False for 0,0 ; 1,1 ; -1,-1; everything greater
 		return !(to.getX() == 0 && to.getY() == 0) && Math.abs(to.getX() + to.getY()) < 2 && Math.abs(to.getX()) <= 1 && Math.abs(to.getY()) <= 1;
 	}

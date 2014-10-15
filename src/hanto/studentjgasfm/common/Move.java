@@ -14,15 +14,41 @@ import hanto.common.HantoCoordinate;
 import hanto.common.HantoPieceType;
 import hanto.common.MoveResult;
 
+/**
+ * The Move class stores information about possible moves
+ */
 public class Move {
-	public final HantoCoordinate to, from;
-	public final HantoPieceType piece;
-	public final MoveResult result;
+	private final HantoCoordinate to, from;
+	private final HantoPieceType piece;
+	private final MoveResult result;
 	
+	/**
+	 * The Move object
+	 * @param piece The type of the piece
+	 * @param from The from location
+	 * @param to The to location
+	 * @param result The result of the movement
+	 */
 	public Move(HantoPieceType piece, HantoCoordinate from, HantoCoordinate to, MoveResult result){
 		this.to = to;
 		this.from = from;
 		this.piece = piece;
 		this.result = result;
+	}
+	
+	public HantoCoordinate getFrom(){
+		return from;
+	}
+	
+	public HantoCoordinate getTo(){
+		return to;
+	}
+	
+	public HantoPieceType getType(){
+		return piece;
+	}
+	
+	public MoveResult getResult(){
+		return result;
 	}
 }

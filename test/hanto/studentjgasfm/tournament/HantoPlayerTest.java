@@ -63,6 +63,30 @@ public class HantoPlayerTest {
 		player2Record = player2.makeMove(player1Record);
 		assertNotNull(player2Record.getPiece());
 		assertNotNull(player2Record.getTo());
+		player1Record = player1.makeMove(player2Record);
+		assertNotNull(player1Record.getPiece());
+		assertNotNull(player1Record.getTo());
+		player2Record = player2.makeMove(player1Record);
+		assertNotNull(player2Record.getPiece());
+		assertNotNull(player2Record.getTo());
+		player1Record = player1.makeMove(player2Record);
+		assertNotNull(player1Record.getPiece());
+		assertNotNull(player1Record.getTo());
+		player2Record = player2.makeMove(player1Record);
+		assertNotNull(player2Record.getPiece());
+		assertNotNull(player2Record.getTo());
+		player1Record = player1.makeMove(player2Record);
+		assertNotNull(player1Record.getPiece());
+		assertNotNull(player1Record.getTo());
+		player2Record = player2.makeMove(player1Record);
+		assertNotNull(player2Record.getPiece());
+		assertNotNull(player2Record.getTo());
+		player1Record = player1.makeMove(player2Record);
+		assertNotNull(player1Record.getPiece());
+		assertNotNull(player1Record.getTo());
+		player2Record = player2.makeMove(player1Record);
+		assertNotNull(player2Record.getPiece());
+		assertNotNull(player2Record.getTo());
 	}
 	
 	@Test

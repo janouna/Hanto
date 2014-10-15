@@ -15,7 +15,8 @@ import hanto.common.HantoCoordinate;
  * Implements HantoCoordinate and changes Hashcode and Equals methods
  */
 public class Coordinate implements HantoCoordinate {
-	private int x, y;
+	private final int x;
+	private final int y;
 
 	/**
 	 * Constructor for Coordinate.
@@ -63,7 +64,7 @@ public class Coordinate implements HantoCoordinate {
 		boolean equals = false;
 
 		if (obj != null && getClass() == obj.getClass()) {
-			Coordinate other = (Coordinate) obj;
+			final Coordinate other = (Coordinate) obj;
 			if (x == other.x && y == other.y) {
 				equals = true;
 			}
