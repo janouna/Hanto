@@ -1,9 +1,13 @@
 package hanto.studentjgasfm.tournament;
 
 import static org.junit.Assert.*;
+import hanto.common.HantoException;
 import hanto.common.HantoGameID;
+import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
+import hanto.common.MoveResult;
 import hanto.studentjgasfm.common.Coordinate;
+import hanto.studentjgasfm.epsilon.EpsilonGame;
 import hanto.tournament.HantoGamePlayer;
 import hanto.tournament.HantoMoveRecord;
 
@@ -38,9 +42,49 @@ public class HantoPlayerTest {
 		player1Record = player1.makeMove(player2Record);
 		assertNotNull(player1Record.getPiece());
 		assertNotNull(player1Record.getTo());
-		player2Record = player2.makeMove(player2Record);
+		player2Record = player2.makeMove(player1Record);
+		assertNotNull(player2Record.getPiece());
+		assertNotNull(player2Record.getTo());
+		player1Record = player1.makeMove(player2Record);
+		assertNotNull(player1Record.getPiece());
+		assertNotNull(player1Record.getTo());
+		player2Record = player2.makeMove(player1Record);
+		assertNotNull(player2Record.getPiece());
+		assertNotNull(player2Record.getTo());
+		player1Record = player1.makeMove(player2Record);
+		assertNotNull(player1Record.getPiece());
+		assertNotNull(player1Record.getTo());
+		player2Record = player2.makeMove(player1Record);
+		assertNotNull(player2Record.getPiece());
+		assertNotNull(player2Record.getTo());
+		player1Record = player1.makeMove(player2Record);
+		assertNotNull(player1Record.getPiece());
+		assertNotNull(player1Record.getTo());
+		player2Record = player2.makeMove(player1Record);
 		assertNotNull(player2Record.getPiece());
 		assertNotNull(player2Record.getTo());
 	}
-
+	
+	@Test
+	public void testTurnByTurn() throws HantoException{
+		EpsilonGame game = new EpsilonGame(HantoPlayerColor.BLUE);
+		assertEquals(MoveResult.OK, game.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(0,0)));
+		assertTrue(game.getPieceAt(new Coordinate(0,0)).getColor() == HantoPlayerColor.BLUE);
+		assertEquals(MoveResult.OK, game.makeMove(HantoPieceType.SPARROW, null, new Coordinate(-1,0)));
+		assertTrue(game.getPieceAt(new Coordinate(0,0)).getColor() == HantoPlayerColor.BLUE);
+		assertTrue(game.getPieceAt(new Coordinate(-1,0)).getColor() == HantoPlayerColor.RED);
+		assertEquals(MoveResult.OK, game.makeMove(HantoPieceType.CRAB, null, new Coordinate(1,-1)));
+		assertTrue(game.getPieceAt(new Coordinate(0,0)).getColor() == HantoPlayerColor.BLUE);
+		assertTrue(game.getPieceAt(new Coordinate(-1,0)).getColor() == HantoPlayerColor.RED);
+		assertTrue(game.getPieceAt(new Coordinate(1,-1)).getColor() == HantoPlayerColor.BLUE);
+		assertEquals(MoveResult.OK, game.makeMove(HantoPieceType.SPARROW, new Coordinate(-1,0), new Coordinate(1,0)));
+		assertTrue(game.getPieceAt(new Coordinate(0,0)).getColor() == HantoPlayerColor.BLUE);
+		assertTrue(game.getPieceAt(new Coordinate(1,0)).getColor() == HantoPlayerColor.RED);
+		assertTrue(game.getPieceAt(new Coordinate(1,-1)).getColor() == HantoPlayerColor.BLUE);
+		assertEquals(MoveResult.OK, game.makeMove(HantoPieceType.CRAB, null, new Coordinate(0,-1)));
+		assertTrue(game.getPieceAt(new Coordinate(0,0)).getColor() == HantoPlayerColor.BLUE);
+		assertTrue(game.getPieceAt(new Coordinate(1,0)).getColor() == HantoPlayerColor.RED);
+		assertTrue(game.getPieceAt(new Coordinate(1,-1)).getColor() == HantoPlayerColor.BLUE);
+		assertTrue(game.getPieceAt(new Coordinate(0,-1)).getColor() == HantoPlayerColor.BLUE);
+	}
 }

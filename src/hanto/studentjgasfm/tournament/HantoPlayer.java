@@ -54,6 +54,12 @@ public class HantoPlayer implements HantoGamePlayer {
 		List<Move> moveButterflyList = new LinkedList<Move>();
 		List<Move> surroundEnemyList = new LinkedList<Move>();
 		Coordinate enemyButterfly = null;
+		/*
+		try{
+			
+		}catch(HantoException e){
+			System.out.println(e.getMessage());
+		}*/
 		
 		try{
 			if(opponentsMove != null){
@@ -105,9 +111,7 @@ public class HantoPlayer implements HantoGamePlayer {
 			}
 			
 			game.makeMove(myMove.getPiece(), myMove.getFrom(), myMove.getTo());
-		}catch (HantoException e){
-			System.out.println(e.getMessage());
-		}
+		}catch (HantoException e){ }
 		
 		return myMove;
 	}

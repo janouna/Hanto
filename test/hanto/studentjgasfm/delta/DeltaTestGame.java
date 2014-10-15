@@ -21,7 +21,7 @@ public class DeltaTestGame extends DeltaGame implements HantoTestGame {
 
 	@Override
 	public void setTurnNumber(int turnNumber) {
-		moveCount = (turnNumber * 2) - 1;
+		moveCount = (turnNumber * 2) - (moveCount % 2);
 	}
 
 	@Override

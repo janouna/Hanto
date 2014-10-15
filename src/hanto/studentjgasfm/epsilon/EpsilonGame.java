@@ -11,9 +11,11 @@
 package hanto.studentjgasfm.epsilon;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import hanto.common.HantoCoordinate;
 import hanto.common.HantoException;
@@ -82,7 +84,8 @@ public class EpsilonGame extends BaseHantoGame {
 			moveList.addAll(getPossiblePlacedPieces(new Coordinate(0,0)));
 		}
 		
-		for(Coordinate c: pieceList.keySet()){
+		Set<Coordinate> keySet = new HashSet<Coordinate>(pieceList.keySet());
+		for(Coordinate c: keySet){
 			HantoPiece p = pieceList.get(c);
 			
 			if(p.getColor() == color){
@@ -109,37 +112,73 @@ public class EpsilonGame extends BaseHantoGame {
 		
 		return moveList;
 	}
-	private List<Move> getPossibleWalkMoves(HantoPieceType piece, Coordinate c, HantoPlayerColor color) {
+	private List<Move> getPossibleWalkMoves(HantoPieceType piece, Coordinate from, HantoPlayerColor color) {
 		List<Move> moveList = new LinkedList<Move>();
 		
-		for(Coordinate d: getAdjacentSpaces(c)){
-			testMovePiece(moveList, c, d, piece, color);
+		for(Coordinate to: getAdjacentSpaces(from)){
+			boolean completed;
+			MoveResult result = null;
+			try{
+				result = walk(piece, from, to);
+				completed = true;
+			}catch(HantoException e){
+				completed = false;
+			}
+			
+			if(completed){
+				moveList.add(new Move(piece, from, to, result));
+				revertTestMove(piece, from, to, color);
+			}
 		}
 		return moveList;
 	}
-	private List<Move> getPossibleFlyMoves(HantoPieceType piece, Coordinate c, HantoPlayerColor color) {
+	private List<Move> getPossibleFlyMoves(HantoPieceType piece, Coordinate from, HantoPlayerColor color) {
 		List<Move> moveList = new LinkedList<Move>();
-		List<Coordinate> validFlyList = getValidFlyArea(c);
+		List<Coordinate> validFlyList = getValidFlyArea(from);
 		
-		for(Coordinate coordinate: validFlyList){
-			testMovePiece(moveList, c, coordinate, piece, color);
+		for(Coordinate to: validFlyList){
+			boolean completed;
+			MoveResult result = null;
+			try{
+				result = fly(piece, from, to);
+				completed = true;
+			}catch(HantoException e){
+				completed = false;
+			}
+			
+			if(completed){
+				moveList.add(new Move(piece, from, to, result));
+				revertTestMove(piece, from, to, color);
+			}
 		}
 		
 		return moveList;
 	}
-	private List<Move> getPossibleJumpMoves(HantoPieceType piece, Coordinate c, HantoPlayerColor color) {
+	private List<Move> getPossibleJumpMoves(HantoPieceType piece, Coordinate from, HantoPlayerColor color) {
 		List<Move> moveList = new LinkedList<Move>();
 		
-		for(Coordinate d: getAdjacentPieceList(c)){
-			Coordinate prevCoordinate = c;
-			Coordinate farCoordinate = d;
+		for(Coordinate to: getAdjacentPieceList(from)){
+			Coordinate prevCoordinate = from;
+			Coordinate farCoordinate = to;
 			while(pieceList.containsKey(farCoordinate)){
 				Coordinate temp = farCoordinate;
 				farCoordinate = getFarCoordinate(prevCoordinate, temp);
 				prevCoordinate = temp;
 			}
 			
-			testMovePiece(moveList, c, farCoordinate, piece, color);
+			boolean completed;
+			MoveResult result = null;
+			try{
+				result = jump(piece, from, farCoordinate);
+				completed = true;
+			}catch(HantoException e){
+				completed = false;
+			}
+			
+			if(completed){
+				moveList.add(new Move(piece, from, farCoordinate, result));
+				revertTestMove(piece, from, farCoordinate, color);
+			}
 		}
 		
 		return moveList;
@@ -149,12 +188,9 @@ public class EpsilonGame extends BaseHantoGame {
 		int yDiff = to.getY() - from.getY();
 		return new Coordinate(to.getX() + xDiff, to.getY() + yDiff);
 	}
-	private void testMovePiece(List<Move> moveList, Coordinate from, Coordinate to, HantoPieceType piece, HantoPlayerColor color){
-		try{
-			MoveResult result = jump(piece, from, to);
-			moveList.add(new Move(piece, from, to, result));
-			revertMove(piece, from, to, color);
-		}catch(HantoException e){}
+	private void revertTestMove(HantoPieceType piece, Coordinate from, Coordinate to, HantoPlayerColor color) {
+		revertMove(piece, from, to, color);
+		moveCount--;
 	}
 	
 	private List<Move> getPossiblePlacedPieces(Coordinate c) {
@@ -189,12 +225,20 @@ public class EpsilonGame extends BaseHantoGame {
 		return moveList;
 	}
 	private void testPlacePiece(List<Move> moveList, Coordinate coordinate, HantoPieceType piece) {
+		boolean completed;
+		MoveResult result = null;
+		
 		try{
-			MoveResult result = moveValidator(piece, null, coordinate);
+			result = moveValidator(piece, null, coordinate);
+			completed = true;
+		}catch(HantoException e){
+			completed = false;
+		}
+		
+		if(completed){
 			moveList.add(new Move(piece, null, coordinate, result));
 			revertPlacePiece(piece, coordinate);
-		}catch(HantoException e){}
-		
+		}
 	}
 	private void revertPlacePiece(HantoPieceType piece, Coordinate coordinate) {
 		moveCount--;

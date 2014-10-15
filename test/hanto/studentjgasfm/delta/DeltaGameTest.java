@@ -29,6 +29,7 @@ public class DeltaGameTest {
 	@Test
 	public void testMoveCrab() throws HantoException {
 		assertEquals(MoveResult.OK, delta.makeMove(HantoPieceType.CRAB, null, new Coordinate(0,0)));
+		delta.makeMove(HantoPieceType.BUTTERFLY, null, new Coordinate(1,0));
 		assertEquals(MoveResult.OK, delta.makeMove(HantoPieceType.CRAB, new Coordinate(0,0), new Coordinate(0,1)));
 	}
 	

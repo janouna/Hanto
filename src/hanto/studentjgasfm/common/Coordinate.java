@@ -70,6 +70,10 @@ public class Coordinate implements HantoCoordinate {
 		}
 		return equals;
 	}
+	@Override
+	public String toString(){
+		return "(" + x + "," + y + ")";
+	}
 	
 	/**
 	 * Determines if a given coordinate is adjacent to this coordinate

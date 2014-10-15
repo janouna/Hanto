@@ -205,7 +205,7 @@ public abstract class BaseHantoGame implements HantoGame {
 
 		HantoPlayerColor color = moveCount % 2 == 1 ? player1Color : player2Color;
 		
-		if(isButterflyTrapped(result) != MoveResult.OK || resigned){
+		if(isButterflyTrapped(result) != MoveResult.OK || resigned || (moveLimit > 0 && moveCount > moveLimit)){
 			throw new HantoException("Game is already over");
 		}
 		if (getPieceAt(to) != null) {
@@ -227,6 +227,9 @@ public abstract class BaseHantoGame implements HantoGame {
 			throw new HantoException("Invalid Position " + to.getX() + "," + to.getY());
 		}
 
+		if(moveLimit > 0 && moveCount > moveLimit){
+			result = MoveResult.DRAW;
+		}
 		result = isButterflyTrapped(result);
 
 		return result;
@@ -248,7 +251,7 @@ public abstract class BaseHantoGame implements HantoGame {
 		
 		if(from != null){
 			HantoPiece p = pieceList.get(new Coordinate(from));
-			if(p == null || p.getType() != pieceType){
+			if(p == null || p.getType() != pieceType  || p.getColor() != color){
 				throw new HantoException("Piece type does not match the piece at the from location");
 			}else{
 				pieceList.remove(new Coordinate(from));
@@ -439,10 +442,6 @@ public abstract class BaseHantoGame implements HantoGame {
 		}
 		if(player2ButterflyLocation != null){
 			player1Wins = isPieceTrapped(player2ButterflyLocation);
-		}
-		
-		if(moveLimit > 0 && moveCount >= moveLimit){
-			result = MoveResult.DRAW; //Only draw at max turns if there isn't already a winner
 		}
 
 		if (player1Wins && player2Wins){
