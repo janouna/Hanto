@@ -103,7 +103,11 @@ public class HantoPlayer implements HantoGamePlayer {
 				Move move = moveList.get((int) Math.floor(Math.random() * moveList.size()));
 				myMove = new HantoMoveRecord(move.piece, move.from, move.to);
 			}
-		}catch (HantoException e){}
+			
+			game.makeMove(myMove.getPiece(), myMove.getFrom(), myMove.getTo());
+		}catch (HantoException e){
+			System.out.println(e.getMessage());
+		}
 		
 		return myMove;
 	}

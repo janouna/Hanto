@@ -197,6 +197,7 @@ public class EpsilonGame extends BaseHantoGame {
 		
 	}
 	private void revertPlacePiece(HantoPieceType piece, Coordinate coordinate) {
+		moveCount--;
 		HantoPlayerColor color = moveCount % 2 == 1 ? player1Color : player2Color;
 		
 		pieceList.remove(coordinate);
