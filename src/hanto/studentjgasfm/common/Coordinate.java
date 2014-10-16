@@ -63,7 +63,7 @@ public class Coordinate implements HantoCoordinate {
 	public boolean equals(Object obj) {
 		boolean equals = false;
 
-		if (obj != null && getClass() == obj.getClass()) {
+		if (obj != null && getClass().equals(obj.getClass())) {
 			final Coordinate other = (Coordinate) obj;
 			if (x == other.x && y == other.y) {
 				equals = true;
